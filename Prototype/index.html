@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groupe Elan - Tableau de Bord Analytique</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header__content">
+                <div class="header__brand">
+                    <div class="logo">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="logo__text">Groupe Elan</span>
+                    </div>
+                    <p class="header__subtitle">Tableau de Bord Analytique</p>
+                </div>
+                <div class="header__actions">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Recherche globale..." class="search-bar__input">
+                        <button class="search-bar__button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="container">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Vue d'ensemble</span>
+                </button>
+                <button class="nav-tab" data-tab="tendances">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Tendances</span>
+                </button>
+                <button class="nav-tab" data-tab="mots-cles">
+                    <i class="fas fa-tags"></i>
+                    <span>Mots-clés</span>
+                </button>
+                <button class="nav-tab" data-tab="poles">
+                    <i class="fas fa-sitemap"></i>
+                    <span>Pôles</span>
+                </button>
+                <button class="nav-tab" data-tab="capitalisation">
+                    <i class="fas fa-book"></i>
+                    <span>Capitalisation</span>
+                </button>
+                <button class="nav-tab" data-tab="ia-strategie">
+                    <i class="fas fa-brain"></i>
+                    <span>IA</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="kpis-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-card__icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="kpi-card__content">
+                            <div class="kpi-card__value">233</div>
+                            <div class="kpi-card__label">Études totales</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card__icon">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <div class="kpi-card__content">
+                            <div class="kpi-card__value">4356</div>
+                            <div class="kpi-card__label">Mots-clés uniques</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card__icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <div class="kpi-card__content">
+                            <div class="kpi-card__value">6</div>
+                            <div class="kpi-card__label">Pôles d'expertise</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card__icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <div class="kpi-card__content">
+                            <div class="kpi-card__value">20</div>
+                            <div class="kpi-card__label">Typologies d'études</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document360 Widget -->
+                <div class="card document360-widget">
+                    <div class="card__body">
+                        <h3>Document360 - Recherche</h3>
+                        <div class="document360-search">
+                            <input type="text" placeholder="Rechercher dans la documentation..." class="form-control">
+                            <button class="btn btn--primary">Rechercher</button>
+                        </div>
+                        <div class="document360-results">
+                            <div class="result-item">
+                                <h4>Méthodologie d'analyse territoriale</h4>
+                                <p>Guide complet pour l'analyse systémique des territoires...</p>
+                                <span class="status status--info">Méthodologies</span>
+                            </div>
+                            <div class="result-item">
+                                <h4>Processus de capitalisation des études</h4>
+                                <p>Documentation du processus de capitalisation des connaissances...</p>
+                                <span class="status status--success">Capitalisation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+                    <div class="card chart-container">
+                        <div class="card__body">
+                            <h3>Évolution du nombre d'études par année</h3>
+                            <canvas id="evolutionChart" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="card chart-container">
+                        <div class="card__body">
+                            <h3>Répartition par pôles</h3>
+                            <canvas id="polesChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Synthèse Table -->
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Tableau de synthèse par année</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Année</th>
+                                    <th>Nombre d'études</th>
+                                    <th>Pôles actifs</th>
+                                </tr>
+                            </thead>
+                            <tbody id="syntheseTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tendances Tab -->
+            <div id="tendances" class="tab-content">
+                <div class="charts-grid">
+                    <div class="card chart-container">
+                        <div class="card__body">
+                            <h3>Évolution par pôles d'expertise</h3>
+                            <canvas id="tendancesChart" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="card chart-container">
+                        <div class="card__body">
+                            <h3>Top 10 des typologies d'études</h3>
+                            <canvas id="typologiesChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mots-clés Tab -->
+            <div id="mots-cles" class="tab-content">
+                <div class="filters-section">
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label class="form-label">Catégorie</label>
+                            <select id="categorieFilter" class="form-control">
+                                <option value="">Toutes les catégories</option>
+                                <option value="Contexte">Contexte</option>
+                                <option value="Enjeux">Enjeux</option>
+                                <option value="Réponses">Réponses</option>
+                                <option value="Étude">Étude</option>
+                                <option value="Méthodes">Méthodes</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="form-label">Année</label>
+                            <select id="anneeFilter" class="form-control">
+                                <option value="">Toutes les années</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="card chart-container">
+                        <div class="card__body">
+                            <h3>Nuage de mots-clés</h3>
+                            <div id="wordCloud" class="word-cloud">
+                                <!-- Le nuage de mots sera généré par JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card chart-container">
+                        <div class="card__body">
+                            <h3>Heatmap de densité des mots-clés</h3>
+                            <canvas id="heatmapChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pôles Tab -->
+            <div id="poles" class="tab-content">
+                <div class="charts-grid">
+                    <div class="card chart-container">
+                        <div class="card__body">
+                            <h3>Répartition par pôles</h3>
+                            <canvas id="polesPieChart" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="card chart-container">
+                        <div class="card__body">
+                            <h3>Top 15 des typologies</h3>
+                            <canvas id="topTypologiesChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Tableau détaillé par pôle et typologie</h3>
+                        <div class="poles-details" id="polesDetails">
+                            <!-- Contenu généré par JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capitalisation Tab -->
+            <div id="capitalisation" class="tab-content">
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Méthodologies clés</h3>
+                        <div class="methodologies-grid" id="methodologiesGrid">
+                            <!-- Contenu généré par JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Timeline du processus</h3>
+                        <div class="timeline" id="processTimeline">
+                            <!-- Contenu généré par JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card document360-widget">
+                    <div class="card__body">
+                        <h3>Document360 - Documentation associée</h3>
+                        <div class="document360-articles">
+                            <div class="article-item">
+                                <h4>Méthodologie d'analyse territoriale</h4>
+                                <p>Guide complet pour l'analyse systémique des territoires</p>
+                                <span class="status status--info">Méthodologies</span>
+                            </div>
+                            <div class="article-item">
+                                <h4>Processus de capitalisation des études</h4>
+                                <p>Documentation du processus de capitalisation des connaissances</p>
+                                <span class="status status--success">Capitalisation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IA & Stratégie Tab -->
+            <div id="ia-strategie" class="tab-content">
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Comparatif des modèles IA</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Modèle</th>
+                                    <th>Sécurité</th>
+                                    <th>Coût</th>
+                                    <th>Capacité</th>
+                                    <th>Score global</th>
+                                </tr>
+                            </thead>
+                            <tbody id="iaBenchmarkTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="card chart-container">
+                        <div class="card__body">
+                            <h3>Graphique radar des critères</h3>
+                            <canvas id="radarChart" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="card document360-widget">
+                        <div class="card__body">
+                            <h3>Document360 - Documentation IA & Innovation</h3>
+                            <div class="document360-articles">
+                                <div class="article-item">
+                                    <h4>Benchmark des modèles IA en urbanisme</h4>
+                                    <p>Comparaison des différents modèles d'intelligence artificielle</p>
+                                    <span class="status status--warning">IA & Innovation</span>
+                                </div>
+                                <div class="article-item">
+                                    <h4>Guide d'implémentation IA</h4>
+                                    <p>Méthodologie d'intégration des solutions d'IA dans les projets</p>
+                                    <span class="status status--success">Innovation</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
