@@ -1,0 +1,41 @@
+{
+    "message_format": {
+        "sender_agent": "string",
+        "recipient_agent": "string",
+        "message_type": "request|response|notification|escalation",
+        "priority": "low|medium|high|critical",
+        "context_reference": "task_id|milestone_id",
+        "payload": "object"
+    },
+    "handoff_triggers": [
+        {
+            "from": "architecte-coordinateur",
+            "to": "backend-core",
+            "condition": "api_specification_complete"
+        },
+        {
+            "from": "backend-core",
+            "to": "frontend",
+            "condition": "graphql_schema_ready"
+        },
+        {
+            "from": "ia-rag",
+            "to": "qa-performance",
+            "condition": "rag_pipeline_implemented"
+        }
+    ],
+    "collaboration_patterns": {
+        "pair_programming": [
+            "backend-core",
+            "frontend"
+        ],
+        "code_review": [
+            "architecte-coordinateur",
+            "professeur-expert"
+        ],
+        "technical_validation": [
+            "professeur-expert",
+            "qa-performance"
+        ]
+    }
+}

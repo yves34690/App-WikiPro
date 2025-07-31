@@ -1,0 +1,98 @@
+{
+  "mcp_name": "docker-kubernetes-mcp",
+  "version": "1.0.0", 
+  "description": "Outils Docker et Kubernetes pour l'Agent Architecte-Coordinateur",
+  
+  "docker_tools": {
+    "dockerfile_generator": {
+      "description": "Génère des Dockerfiles optimisés pour les microservices WikiPro",
+      "templates": ["nodejs-nestjs", "react-frontend", "nginx-proxy"],
+      "security_hardening": true,
+      "multi_stage_builds": true
+    },
+    "compose_orchestrator": {
+      "description": "Gère docker-compose pour le développement local",
+      "services": ["api-gateway", "auth-service", "user-service", "kb-service", "rag-service"],
+      "networks": ["wikipro-network"],
+      "volumes": ["postgres-data", "redis-data"]
+    },
+    "image_optimizer": {
+      "description": "Optimise les images Docker pour la production",
+      "compression": true,
+      "vulnerability_scanning": true,
+      "size_optimization": true
+    }
+  },
+  
+  "kubernetes_tools": {
+    "manifest_generator": {
+      "description": "Génère les manifests K8s pour WikiPro",
+      "resources": ["deployments", "services", "ingress", "configmaps", "secrets"],
+      "namespace": "wikipro-prod",
+      "labels": {
+        "app": "wikipro",
+        "version": "v1.0.0",
+        "environment": "production"
+      }
+    },
+    "helm_charts": {
+      "description": "Charts Helm pour déploiement WikiPro",
+      "charts": ["wikipro-backend", "wikipro-frontend", "wikipro-infra"],
+      "values_templates": ["dev", "staging", "prod"]
+    },
+    "scaling_manager": {
+      "description": "Configure l'auto-scaling des services",
+      "hpa_config": {
+        "min_replicas": 2,
+        "max_replicas": 10,
+        "cpu_threshold": 70,
+        "memory_threshold": 80
+      }
+    },
+    "service_mesh": {
+      "description": "Configuration Istio pour inter-service communication",
+      "features": ["traffic_management", "security", "observability"],
+      "mtls_enabled": true
+    }
+  },
+  
+  "monitoring_integration": {
+    "prometheus": {
+      "metrics_endpoints": "/metrics",
+      "scrape_interval": "30s",
+      "retention": "15d"
+    },
+    "grafana": {
+      "dashboards": ["service-overview", "resource-usage", "error-rates"],
+      "alerts": ["high-cpu", "memory-leak", "service-down"]
+    }
+  },
+  
+  "security_policies": {
+    "pod_security": {
+      "run_as_non_root": true,
+      "read_only_filesystem": true,
+      "no_privilege_escalation": true
+    },
+    "network_policies": {
+      "default_deny": true,
+      "allowed_connections": [
+        "frontend -> api-gateway",
+        "api-gateway -> backend-services", 
+        "backend-services -> databases"
+      ]
+    }
+  },
+  
+  "backup_strategy": {
+    "persistent_volumes": {
+      "backup_schedule": "0 2 * * *",
+      "retention_days": 30,
+      "encryption": true
+    },
+    "database_backups": {
+      "postgres_schedule": "0 3 * * *", 
+      "pinecone_snapshot": "weekly"
+    }
+  }
+}

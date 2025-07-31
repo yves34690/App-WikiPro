@@ -1,0 +1,60 @@
+{
+  "claude_code_integration": {
+    "workspace_config": {
+      "name": "wikipro-agents-workspace",
+      "description": "Espace de travail coordonné pour les 7 agents WikiPro",
+      "version": "1.0.0",
+      "agents_directory": ".claude/agents",
+      "shared_context_directory": ".claude/shared-context",
+      "mcp_configs_directory": ".claude/mcp-configs"
+    },
+    "session_management": {
+      "session_persistence": true,
+      "context_sharing": "cross_agent",
+      "memory_retention": "7_days",
+      "collaboration_mode": "enabled"
+    },
+    "agent_orchestration": {
+      "coordination_agent": "architecte-coordinateur",
+      "escalation_agent": "professeur-expert",
+      "auto_handoff_enabled": true,
+      "workflow_tracking": true
+    }
+  },
+  "claude.agents.workspaceEnabled": true,
+  "claude.agents.configPath": ".claude/agents",
+  "claude.agents.sharedContext": ".claude/shared-context",
+  "claude.agents.mcpConfigs": ".claude/mcp-configs",
+  "claude.coordination.enabled": true,
+  "claude.coordination.masterAgent": "architecte-coordinateur",
+  "claude.coordination.escalationAgent": "professeur-expert",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.organizeImports": true
+  },
+  "files.associations": {
+    "*.agent.json": "json",
+    "*.mcp.json": "json",
+    "*.workflow.md": "markdown"
+  },
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
+  },
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.suggest.autoImports": true,
+  "jest.autoRun": "watch",
+  "jest.showCoverageOnLoad": true,
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  "extensions.recommendations": [
+    "ms-vscode.vscode-typescript-next",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "ms-vscode.vscode-json",
+    "bradlc.vscode-tailwindcss",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "ms-vscode-remote.vscode-remote-containers"
+  ]
+}
