@@ -1,0 +1,26 @@
+{
+    "mcp_name": "backend-testing-mcp",
+    "version": "1.0.0",
+    "description": "Framework de tests complet pour Backend-Core WikiPro",
+    "testing_framework": {
+        "unit_tests": {
+            "framework": "jest",
+            "coverage_threshold": {
+                "global": {
+                    "branches": 85,
+                    "functions": 85,
+                    "lines": 85,
+                    "statements": 85
+                }
+            }
+        },
+        "integration_tests": {
+            "database": "test-containers postgresql",
+            "tenant_isolation": "multi-tenant test scenarios"
+        },
+        "security_tests": {
+            "cross_tenant_access": "should_fail",
+            "permission_validation": "role_based_checks"
+        }
+    }
+}

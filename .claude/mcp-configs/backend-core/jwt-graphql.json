@@ -1,0 +1,484 @@
+{
+    "mcp_name": "jwt-graphql-mcp",
+    "version": "1.0.0",
+    "description": "Outils JWT Authentication et GraphQL pour WikiPro Backend-Core",
+    "jwt_authentication": {
+        "token_management": {
+            "description": "Gestion complète des tokens JWT",
+            "access_token": {
+                "expiry": "15m",
+                "algorithm": "RS256",
+                "claims": {
+                    "sub": "user_id",
+                    "tenant_id": "tenant_uuid",
+                    "email": "user_email",
+                    "roles": "user_roles_array",
+                    "permissions": "permissions_array",
+                    "iat": "issued_at",
+                    "exp": "expires_at"
+                }
+            },
+            "refresh_token": {
+                "expiry": "7d",
+                "rotation": true,
+                "family_tracking": true,
+                "storage": "database_with_revocation"
+            },
+            "security_features": {
+                "key_rotation": "monthly",
+                "token_blacklisting": true,
+                "rate_limiting": "5_attempts_per_minute",
+                "brute_force_protection": true
+            }
+        },
+        "authentication_flow": {
+            "description": "Flux d'authentification complet",
+            "endpoints": {
+                "login": {
+                    "path": "/auth/login",
+                    "method": "POST",
+                    "input": {
+                        "email": "string",
+                        "password": "string"
+                    },
+                    "output": {
+                        "access_token": "jwt",
+                        "refresh_token": "jwt",
+                        "user": "UserProfile"
+                    }
+                },
+                "register": {
+                    "path": "/auth/register",
+                    "method": "POST",
+                    "input": {
+                        "email": "string",
+                        "password": "string",
+                        "name": "string",
+                        "tenant_id": "uuid"
+                    },
+                    "validation": [
+                        "email_unique_per_tenant",
+                        "password_strength",
+                        "tenant_exists"
+                    ]
+                },
+                "refresh": {
+                    "path": "/auth/refresh",
+                    "method": "POST",
+                    "input": {
+                        "refresh_token": "jwt"
+                    },
+                    "output": {
+                        "access_token": "jwt",
+                        "refresh_token": "jwt"
+                    }
+                },
+                "logout": {
+                    "path": "/auth/logout",
+                    "method": "POST",
+                    "action": "revoke_tokens_and_blacklist"
+                }
+            },
+            "password_policies": {
+                "min_length": 8,
+                "require_uppercase": true,
+                "require_lowercase": true,
+                "require_numbers": true,
+                "require_special_chars": true,
+                "max_age": "90_days",
+                "history_check": "last_5_passwords"
+            }
+        },
+        "authorization_system": {
+            "description": "Système d'autorisation basé sur les rôles",
+            "role_hierarchy": {
+                "ADMIN": {
+                    "level": 3,
+                    "inherits": [
+                        "EDITOR",
+                        "VIEWER"
+                    ],
+                    "permissions": [
+                        "*"
+                    ]
+                },
+                "EDITOR": {
+                    "level": 2,
+                    "inherits": [
+                        "VIEWER"
+                    ],
+                    "permissions": [
+                        "document.create",
+                        "document.update",
+                        "document.delete",
+                        "kb.update"
+                    ]
+                },
+                "VIEWER": {
+                    "level": 1,
+                    "permissions": [
+                        "document.read",
+                        "kb.read"
+                    ]
+                }
+            },
+            "permission_system": {
+                "format": "resource.action",
+                "resources": [
+                    "user",
+                    "tenant",
+                    "kb",
+                    "document",
+                    "role"
+                ],
+                "actions": [
+                    "create",
+                    "read",
+                    "update",
+                    "delete",
+                    "manage"
+                ],
+                "wildcard_support": true
+            }
+        },
+        "guards_and_decorators": {
+            "description": "Guards NestJS et décorateurs personnalisés",
+            "guards": {
+                "JwtAuthGuard": {
+                    "description": "Validation JWT et extraction utilisateur",
+                    "implementation": "passport-jwt strategy",
+                    "token_extraction": "Bearer header"
+                },
+                "RolesGuard": {
+                    "description": "Vérification des rôles utilisateur",
+                    "metadata_key": "roles",
+                    "hierarchy_aware": true
+                },
+                "TenantGuard": {
+                    "description": "Vérification accès tenant",
+                    "isolation_check": true,
+                    "admin_override": false
+                },
+                "PermissionsGuard": {
+                    "description": "Vérification granulaire des permissions",
+                    "metadata_key": "permissions",
+                    "resource_aware": true
+                }
+            },
+            "decorators": {
+                "@CurrentUser": "Extract user from JWT",
+                "@CurrentTenant": "Extract tenant from context",
+                "@Roles": "Specify required roles",
+                "@Permissions": "Specify required permissions",
+                "@Public": "Skip authentication for endpoint"
+            }
+        }
+    },
+    "graphql_configuration": {
+        "apollo_server_setup": {
+            "description": "Configuration Apollo Server pour WikiPro",
+            "features": {
+                "code_first": true,
+                "auto_schema_generation": true,
+                "playground": {
+                    "development": true,
+                    "production": false
+                },
+                "introspection": {
+                    "development": true,
+                    "production": false
+                },
+                "subscriptions": {
+                    "enabled": true,
+                    "transport": "websocket"
+                }
+            },
+            "context_configuration": {
+                "request_scoped": true,
+                "tenant_injection": "automatic",
+                "user_injection": "from_jwt",
+                "permissions_injection": "from_user_roles"
+            }
+        },
+        "schema_design": {
+            "description": "Design du schéma GraphQL WikiPro",
+            "types": {
+                "Tenant": {
+                    "fields": [
+                        "id",
+                        "name",
+                        "domain",
+                        "settings",
+                        "createdAt",
+                        "updatedAt"
+                    ],
+                    "relations": [
+                        "users",
+                        "knowledgeBases"
+                    ]
+                },
+                "User": {
+                    "fields": [
+                        "id",
+                        "email",
+                        "profile",
+                        "emailVerified",
+                        "lastLogin",
+                        "createdAt"
+                    ],
+                    "relations": [
+                        "tenant",
+                        "roles",
+                        "createdKnowledgeBases",
+                        "uploadedDocuments"
+                    ]
+                },
+                "Role": {
+                    "fields": [
+                        "id",
+                        "name",
+                        "permissions",
+                        "isSystem",
+                        "createdAt"
+                    ],
+                    "relations": [
+                        "users",
+                        "tenant"
+                    ]
+                },
+                "KnowledgeBase": {
+                    "fields": [
+                        "id",
+                        "name",
+                        "description",
+                        "settings",
+                        "isActive",
+                        "createdAt"
+                    ],
+                    "relations": [
+                        "tenant",
+                        "createdBy",
+                        "documents"
+                    ]
+                },
+                "Document": {
+                    "fields": [
+                        "id",
+                        "name",
+                        "filename",
+                        "size",
+                        "mimeType",
+                        "status",
+                        "metadata",
+                        "createdAt"
+                    ],
+                    "relations": [
+                        "knowledgeBase",
+                        "tenant",
+                        "uploadedBy"
+                    ]
+                }
+            },
+            "enums": {
+                "DocumentStatus": [
+                    "PENDING",
+                    "PROCESSING",
+                    "INDEXED",
+                    "FAILED"
+                ],
+                "UserRole": [
+                    "ADMIN",
+                    "EDITOR",
+                    "VIEWER"
+                ],
+                "PermissionAction": [
+                    "CREATE",
+                    "READ",
+                    "UPDATE",
+                    "DELETE",
+                    "MANAGE"
+                ]
+            }
+        },
+        "resolvers_architecture": {
+            "description": "Architecture des resolvers GraphQL",
+            "patterns": {
+                "field_resolvers": "For computed and relation fields",
+                "dataloader_pattern": "N+1 query prevention",
+                "tenant_scoping": "Automatic in all resolvers",
+                "permission_checking": "Decorator-based authorization"
+            },
+            "resolver_examples": {
+                "UserResolver": {
+                    "queries": [
+                        "me",
+                        "users",
+                        "user"
+                    ],
+                    "mutations": [
+                        "updateProfile",
+                        "changePassword"
+                    ],
+                    "field_resolvers": [
+                        "roles",
+                        "tenant",
+                        "permissions"
+                    ]
+                },
+                "KnowledgeBaseResolver": {
+                    "queries": [
+                        "knowledgeBase",
+                        "knowledgeBases",
+                        "myKnowledgeBases"
+                    ],
+                    "mutations": [
+                        "createKnowledgeBase",
+                        "updateKnowledgeBase",
+                        "deleteKnowledgeBase"
+                    ],
+                    "field_resolvers": [
+                        "documents",
+                        "documentsCount",
+                        "createdBy"
+                    ]
+                }
+            }
+        },
+        "input_validation": {
+            "description": "Validation des inputs GraphQL",
+            "validation_pipes": {
+                "GraphQLValidationPipe": "class-validator integration",
+                "TenantValidationPipe": "Tenant access validation",
+                "PermissionValidationPipe": "Permission checking"
+            },
+            "input_types": {
+                "CreateUserInput": {
+                    "fields": {
+                        "email": "@IsEmail() @IsNotEmpty()",
+                        "password": "@MinLength(8) @Matches(password_regex)",
+                        "name": "@IsString() @Length(2, 100)"
+                    }
+                },
+                "CreateKnowledgeBaseInput": {
+                    "fields": {
+                        "name": "@IsString() @Length(1, 255)",
+                        "description": "@IsOptional() @IsString() @MaxLength(1000)"
+                    }
+                }
+            }
+        },
+        "error_handling": {
+            "description": "Gestion d'erreurs GraphQL centralisée",
+            "error_types": {
+                "AuthenticationError": "JWT invalid or expired",
+                "AuthorizationError": "Insufficient permissions",
+                "TenantAccessError": "Cross-tenant access attempt",
+                "ValidationError": "Input validation failed",
+                "NotFoundError": "Resource not found",
+                "ConflictError": "Resource already exists"
+            },
+            "error_formatting": {
+                "development": "Full stack trace and details",
+                "production": "Sanitized user-friendly messages",
+                "logging": "All errors logged with context"
+            }
+        }
+    },
+    "security_middleware": {
+        "query_complexity": {
+            "description": "Protection contre les requêtes complexes",
+            "max_depth": 10,
+            "max_complexity": 1000,
+            "cost_analysis": {
+                "field_costs": {
+                    "simple_fields": 1,
+                    "relation_fields": 2,
+                    "computed_fields": 5
+                }
+            }
+        },
+        "rate_limiting": {
+            "description": "Limitation du taux de requêtes",
+            "strategies": {
+                "per_user": "100 requests/minute",
+                "per_tenant": "1000 requests/minute",
+                "per_ip": "200 requests/minute"
+            },
+            "query_specific": {
+                "expensive_queries": "10 requests/minute",
+                "mutations": "20 requests/minute",
+                "subscriptions": "5 concurrent/user"
+            }
+        },
+        "query_whitelist": {
+            "description": "Whitelist des requêtes autorisées en production",
+            "enabled": false,
+            "persisted_queries": true,
+            "automatic_allowlist": "development_queries"
+        }
+    },
+    "testing_framework": {
+        "graphql_testing": {
+            "description": "Framework de test pour GraphQL",
+            "tools": [
+                "apollo-server-testing",
+                "graphql-query-test-mock"
+            ],
+            "test_scenarios": {
+                "authentication_tests": [
+                    "valid_jwt_should_pass",
+                    "invalid_jwt_should_fail",
+                    "expired_jwt_should_fail"
+                ],
+                "authorization_tests": [
+                    "admin_can_access_all",
+                    "editor_can_modify_documents",
+                    "viewer_readonly_access"
+                ],
+                "tenant_isolation_tests": [
+                    "user_cannot_access_other_tenant_data",
+                    "queries_automatically_scoped_to_tenant",
+                    "cross_tenant_mutations_blocked"
+                ]
+            }
+        },
+        "integration_testing": {
+            "description": "Tests d'intégration GraphQL-Database",
+            "setup": {
+                "test_database": "separate_postgres_instance",
+                "data_seeding": "automated_before_each_test",
+                "tenant_setup": "multiple_test_tenants"
+            },
+            "test_categories": [
+                "crud_operations_per_type",
+                "complex_queries_with_relations",
+                "mutation_side_effects",
+                "subscription_real_time_updates"
+            ]
+        }
+    },
+    "performance_optimization": {
+        "dataloader_configuration": {
+            "description": "Optimisation N+1 queries avec DataLoader",
+            "loaders": {
+                "usersByTenantId": "Batch load users by tenant",
+                "rolesByUserId": "Batch load roles by user",
+                "documentsByKbId": "Batch load documents by knowledge base"
+            },
+            "caching_strategy": {
+                "per_request": true,
+                "cache_ttl": "5_minutes",
+                "cache_invalidation": "mutation_based"
+            }
+        },
+        "query_optimization": {
+            "description": "Optimisation des requêtes GraphQL",
+            "strategies": {
+                "selective_field_loading": "Only load requested fields",
+                "relation_optimization": "Smart JOIN strategies",
+                "pagination": "Cursor-based pagination",
+                "filtering": "Database-level filtering"
+            }
+        }
+    }
+}

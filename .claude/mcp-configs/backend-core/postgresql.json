@@ -1,0 +1,368 @@
+{
+    "mcp_name": "postgresql-multitenancy-mcp",
+    "version": "1.0.0",
+    "description": "Outils PostgreSQL et Multi-tenancy pour WikiPro Backend-Core",
+    "database_tools": {
+        "schema_generator": {
+            "description": "Génère le schéma PostgreSQL multi-tenant WikiPro",
+            "core_tables": {
+                "tenants": {
+                    "columns": {
+                        "id": "UUID PRIMARY KEY DEFAULT gen_random_uuid()",
+                        "name": "VARCHAR(255) NOT NULL",
+                        "domain": "VARCHAR(255) UNIQUE",
+                        "settings": "JSONB DEFAULT '{}'",
+                        "created_at": "TIMESTAMP DEFAULT NOW()",
+                        "updated_at": "TIMESTAMP DEFAULT NOW()"
+                    },
+                    "indexes": [
+                        "CREATE INDEX idx_tenants_domain ON tenants(domain)"
+                    ]
+                },
+                "users": {
+                    "columns": {
+                        "id": "UUID PRIMARY KEY DEFAULT gen_random_uuid()",
+                        "email": "VARCHAR(255) NOT NULL",
+                        "password_hash": "VARCHAR(255) NOT NULL",
+                        "tenant_id": "UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE",
+                        "profile": "JSONB DEFAULT '{}'",
+                        "email_verified": "BOOLEAN DEFAULT FALSE",
+                        "last_login": "TIMESTAMP",
+                        "created_at": "TIMESTAMP DEFAULT NOW()",
+                        "updated_at": "TIMESTAMP DEFAULT NOW()"
+                    },
+                    "constraints": [
+                        "UNIQUE(email, tenant_id)",
+                        "CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')"
+                    ],
+                    "indexes": [
+                        "CREATE INDEX idx_users_tenant_email ON users(tenant_id, email)",
+                        "CREATE INDEX idx_users_tenant_id ON users(tenant_id)"
+                    ]
+                },
+                "roles": {
+                    "columns": {
+                        "id": "UUID PRIMARY KEY DEFAULT gen_random_uuid()",
+                        "name": "VARCHAR(50) NOT NULL",
+                        "permissions": "JSONB NOT NULL DEFAULT '[]'",
+                        "tenant_id": "UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE",
+                        "is_system": "BOOLEAN DEFAULT FALSE",
+                        "created_at": "TIMESTAMP DEFAULT NOW()"
+                    },
+                    "constraints": [
+                        "UNIQUE(name, tenant_id)"
+                    ]
+                },
+                "user_roles": {
+                    "columns": {
+                        "id": "UUID PRIMARY KEY DEFAULT gen_random_uuid()",
+                        "user_id": "UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE",
+                        "role_id": "UUID NOT NULL REFERENCES roles(id) ON DELETE CASCADE",
+                        "assigned_by": "UUID REFERENCES users(id)",
+                        "assigned_at": "TIMESTAMP DEFAULT NOW()"
+                    },
+                    "constraints": [
+                        "UNIQUE(user_id, role_id)"
+                    ]
+                },
+                "knowledge_bases": {
+                    "columns": {
+                        "id": "UUID PRIMARY KEY DEFAULT gen_random_uuid()",
+                        "name": "VARCHAR(255) NOT NULL",
+                        "description": "TEXT",
+                        "tenant_id": "UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE",
+                        "created_by": "UUID NOT NULL REFERENCES users(id)",
+                        "settings": "JSONB DEFAULT '{}'",
+                        "is_active": "BOOLEAN DEFAULT TRUE",
+                        "created_at": "TIMESTAMP DEFAULT NOW()",
+                        "updated_at": "TIMESTAMP DEFAULT NOW()"
+                    },
+                    "indexes": [
+                        "CREATE INDEX idx_kb_tenant_id ON knowledge_bases(tenant_id)",
+                        "CREATE INDEX idx_kb_created_by ON knowledge_bases(created_by)"
+                    ]
+                },
+                "documents": {
+                    "columns": {
+                        "id": "UUID PRIMARY KEY DEFAULT gen_random_uuid()",
+                        "name": "VARCHAR(255) NOT NULL",
+                        "original_filename": "VARCHAR(255) NOT NULL",
+                        "file_path": "TEXT",
+                        "file_size": "BIGINT NOT NULL",
+                        "mime_type": "VARCHAR(100)",
+                        "status": "VARCHAR(20) DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'PROCESSING', 'INDEXED', 'FAILED'))",
+                        "kb_id": "UUID NOT NULL REFERENCES knowledge_bases(id) ON DELETE CASCADE",
+                        "tenant_id": "UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE",
+                        "uploaded_by": "UUID NOT NULL REFERENCES users(id)",
+                        "metadata": "JSONB DEFAULT '{}'",
+                        "processing_error": "TEXT",
+                        "created_at": "TIMESTAMP DEFAULT NOW()",
+                        "updated_at": "TIMESTAMP DEFAULT NOW()"
+                    },
+                    "indexes": [
+                        "CREATE INDEX idx_documents_tenant_id ON documents(tenant_id)",
+                        "CREATE INDEX idx_documents_kb_id ON documents(kb_id)",
+                        "CREATE INDEX idx_documents_status ON documents(status)",
+                        "CREATE INDEX idx_documents_created_at ON documents(created_at DESC)"
+                    ]
+                }
+            }
+        },
+        "migration_manager": {
+            "description": "Gestion des migrations avec Prisma",
+            "features": {
+                "version_control": "prisma_migrate",
+                "rollback_support": true,
+                "data_migrations": "custom_scripts",
+                "environment_specific": true
+            },
+            "migration_templates": {
+                "add_tenant_column": "ALTER TABLE {table} ADD COLUMN tenant_id UUID NOT NULL REFERENCES tenants(id)",
+                "create_rls_policy": "CREATE POLICY tenant_isolation ON {table} FOR ALL TO authenticated USING (tenant_id = current_setting('app.current_tenant_id')::UUID)"
+            }
+        },
+        "seeding_system": {
+            "description": "Données de test et initialisation",
+            "seed_data": {
+                "default_tenant": {
+                    "name": "WikiPro Demo",
+                    "domain": "demo.wikipro.com",
+                    "settings": {
+                        "max_users": 50,
+                        "max_documents": 1000,
+                        "features": [
+                            "basic_rag",
+                            "document_upload"
+                        ]
+                    }
+                },
+                "default_roles": [
+                    {
+                        "name": "ADMIN",
+                        "permissions": [
+                            "user.create",
+                            "user.read",
+                            "user.update",
+                            "user.delete",
+                            "kb.create",
+                            "kb.read",
+                            "kb.update",
+                            "kb.delete",
+                            "document.create",
+                            "document.read",
+                            "document.update",
+                            "document.delete"
+                        ]
+                    },
+                    {
+                        "name": "EDITOR",
+                        "permissions": [
+                            "kb.read",
+                            "kb.update",
+                            "document.create",
+                            "document.read",
+                            "document.update",
+                            "document.delete"
+                        ]
+                    },
+                    {
+                        "name": "VIEWER",
+                        "permissions": [
+                            "kb.read",
+                            "document.read"
+                        ]
+                    }
+                ],
+                "test_users": [
+                    {
+                        "email": "admin@demo.wikipro.com",
+                        "name": "Admin User",
+                        "role": "ADMIN"
+                    },
+                    {
+                        "email": "editor@demo.wikipro.com",
+                        "name": "Editor User",
+                        "role": "EDITOR"
+                    }
+                ]
+            }
+        }
+    },
+    "multi_tenancy_tools": {
+        "tenant_isolation": {
+            "description": "Outils d'isolation stricte des données par tenant",
+            "strategies": {
+                "row_level_security": {
+                    "enabled": true,
+                    "policies": {
+                        "tenant_filter": "CREATE POLICY tenant_isolation ON {table} FOR ALL USING (tenant_id = current_setting('app.current_tenant_id')::UUID)",
+                        "tenant_insert": "CREATE POLICY tenant_insert ON {table} FOR INSERT WITH CHECK (tenant_id = current_setting('app.current_tenant_id')::UUID)"
+                    }
+                },
+                "application_level": {
+                    "middleware": "TenantMiddleware",
+                    "automatic_filtering": true,
+                    "query_interceptor": true
+                }
+            }
+        },
+        "tenant_context_manager": {
+            "description": "Gestion du contexte tenant dans les requêtes",
+            "implementation": {
+                "session_variable": "app.current_tenant_id",
+                "jwt_extraction": "tenant_claim",
+                "request_scoping": "per_request_context",
+                "validation": "tenant_access_verification"
+            },
+            "middleware_logic": {
+                "extract_tenant": "from JWT or header",
+                "validate_access": "user belongs to tenant",
+                "set_context": "PostgreSQL session variable",
+                "filter_queries": "automatic tenant_id filtering"
+            }
+        },
+        "cross_tenant_prevention": {
+            "description": "Prévention des fuites de données entre tenants",
+            "validation_rules": [
+                "Every query must include tenant_id filter",
+                "Foreign key references must respect tenant boundaries",
+                "User can only access their tenant's data",
+                "Admin users are scoped to their tenant only"
+            ],
+            "automated_tests": {
+                "cross_tenant_access_attempts": "should_fail",
+                "data_isolation_verification": "comprehensive_test_suite",
+                "permission_boundary_testing": "role_based_access_control"
+            }
+        }
+    },
+    "query_optimization": {
+        "indexing_strategy": {
+            "description": "Stratégie d'indexation optimisée pour multi-tenant",
+            "tenant_scoped_indexes": [
+                "CREATE INDEX idx_{table}_tenant_lookup ON {table}(tenant_id, {frequently_queried_column})",
+                "CREATE INDEX idx_{table}_tenant_date ON {table}(tenant_id, created_at DESC)"
+            ],
+            "performance_indexes": [
+                "users: (tenant_id, email)",
+                "documents: (tenant_id, status, created_at)",
+                "knowledge_bases: (tenant_id, is_active)"
+            ]
+        },
+        "query_patterns": {
+            "description": "Patterns de requêtes optimisées",
+            "tenant_filtered_queries": {
+                "select": "SELECT * FROM {table} WHERE tenant_id = $1 AND {conditions}",
+                "update": "UPDATE {table} SET {fields} WHERE tenant_id = $1 AND id = $2",
+                "delete": "DELETE FROM {table} WHERE tenant_id = $1 AND id = $2"
+            },
+            "join_patterns": {
+                "tenant_safe_joins": "JOIN with tenant_id equality check",
+                "performance_hints": "Use tenant_id in all JOIN conditions"
+            }
+        },
+        "connection_pooling": {
+            "description": "Configuration du pool de connexions",
+            "configuration": {
+                "max_connections": 20,
+                "idle_timeout": "30s",
+                "connection_lifetime": "1h",
+                "tenant_connection_distribution": "round_robin"
+            }
+        }
+    },
+    "backup_and_recovery": {
+        "tenant_aware_backups": {
+            "description": "Sauvegardes conscientes du multi-tenant",
+            "strategies": {
+                "full_database": "Daily complete backup",
+                "tenant_specific": "Individual tenant data export",
+                "point_in_time": "WAL-based recovery capability"
+            },
+            "schedule": {
+                "full_backup": "0 2 * * *",
+                "incremental": "0 */6 * * *",
+                "retention": "30 days full, 7 days incremental"
+            }
+        },
+        "disaster_recovery": {
+            "description": "Plan de récupération après sinistre",
+            "procedures": {
+                "tenant_isolation_verification": "Post-recovery tenant boundary check",
+                "data_integrity_validation": "Cross-reference tenant data consistency",
+                "permission_verification": "Validate user-tenant relationships"
+            }
+        }
+    },
+    "monitoring_and_analytics": {
+        "tenant_metrics": {
+            "description": "Métriques par tenant pour monitoring",
+            "queries": {
+                "active_users_per_tenant": "SELECT tenant_id, COUNT(*) FROM users WHERE last_login > NOW() - INTERVAL '7 days' GROUP BY tenant_id",
+                "documents_per_tenant": "SELECT tenant_id, COUNT(*), AVG(file_size) FROM documents GROUP BY tenant_id",
+                "storage_usage_per_tenant": "SELECT tenant_id, SUM(file_size) as total_storage FROM documents GROUP BY tenant_id"
+            }
+        },
+        "performance_monitoring": {
+            "description": "Surveillance des performances multi-tenant",
+            "slow_query_detection": {
+                "threshold": "100ms",
+                "tenant_scoped": true,
+                "alerting": "when query affects multiple tenants"
+            },
+            "resource_usage": {
+                "per_tenant_resource_tracking": true,
+                "fair_usage_monitoring": true,
+                "quota_enforcement": "configurable_per_tenant"
+            }
+        }
+    },
+    "security_features": {
+        "data_encryption": {
+            "description": "Chiffrement des données sensibles",
+            "at_rest": {
+                "enabled": true,
+                "method": "PostgreSQL TDE or filesystem encryption"
+            },
+            "in_transit": {
+                "ssl_required": true,
+                "certificate_validation": true
+            },
+            "application_level": {
+                "sensitive_fields": [
+                    "password_hash",
+                    "personal_data"
+                ],
+                "encryption_method": "AES-256-GCM"
+            }
+        },
+        "audit_logging": {
+            "description": "Journalisation des accès et modifications",
+            "tracked_operations": [
+                "tenant_creation",
+                "user_authentication",
+                "data_access_cross_tenant_attempts",
+                "permission_changes",
+                "data_modifications"
+            ],
+            "log_retention": "2 years",
+            "compliance": "GDPR ready"
+        }
+    },
+    "development_tools": {
+        "local_development": {
+            "description": "Outils pour développement local",
+            "docker_compose": {
+                "postgresql_service": "postgres:15-alpine",
+                "test_data": "automatic seeding",
+                "multiple_databases": "dev, test, integration"
+            }
+        },
+        "testing_utilities": {
+            "description": "Utilitaires pour tests multi-tenant",
+            "test_tenant_factory": "Create isolated test tenants",
+            "data_cleanup": "Automatic test data cleanup",
+            "tenant_switching": "Easy tenant context switching in tests"
+        }
+    }
+}

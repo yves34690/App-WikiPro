@@ -1,0 +1,283 @@
+{
+    "mcp_name": "nestjs-framework-mcp",
+    "version": "1.0.0",
+    "description": "Outils NestJS complets pour l'Agent Backend-Core Specialist",
+    "nestjs_tools": {
+        "project_generator": {
+            "description": "Génère la structure de projet NestJS optimisée pour WikiPro",
+            "templates": {
+                "microservice": {
+                    "structure": [
+                        "src/",
+                        "test/",
+                        "libs/"
+                    ],
+                    "modules": [
+                        "auth",
+                        "users",
+                        "knowledge-base",
+                        "common"
+                    ],
+                    "decorators": [
+                        "@Controller",
+                        "@Service",
+                        "@Repository",
+                        "@Guard"
+                    ]
+                }
+            },
+            "configuration": {
+                "typescript": "5.0+",
+                "node_version": "18+",
+                "package_manager": "npm"
+            }
+        },
+        "module_scaffolding": {
+            "description": "Génère modules NestJS avec structure complète",
+            "templates": {
+                "service_module": {
+                    "files": [
+                        "module.ts",
+                        "controller.ts",
+                        "service.ts",
+                        "dto/",
+                        "entities/",
+                        "repositories/",
+                        "guards/",
+                        "spec/"
+                    ]
+                }
+            },
+            "features": {
+                "dependency_injection": true,
+                "graphql_integration": true,
+                "validation_pipes": true,
+                "exception_filters": true
+            }
+        },
+        "auth_service_generator": {
+            "description": "Génère le service d'authentification complet",
+            "components": {
+                "jwt_strategy": {
+                    "access_token_expiry": "15m",
+                    "refresh_token_expiry": "7d",
+                    "secret_management": "environment_variables"
+                },
+                "guards": [
+                    "JwtAuthGuard",
+                    "RolesGuard",
+                    "TenantGuard"
+                ],
+                "decorators": [
+                    "@CurrentUser",
+                    "@CurrentTenant",
+                    "@Roles"
+                ]
+            }
+        },
+        "database_integration": {
+            "description": "Intégration PostgreSQL avec ORM",
+            "orm_choice": "prisma",
+            "features": {
+                "migrations": true,
+                "seeding": true,
+                "connection_pooling": true,
+                "query_optimization": true
+            },
+            "multi_tenant_setup": {
+                "strategy": "tenant_id_filter",
+                "middleware": "TenantMiddleware",
+                "rls_support": true
+            }
+        }
+    },
+    "code_generation": {
+        "dto_generator": {
+            "description": "Génère les DTOs avec validation",
+            "validation_library": "class-validator",
+            "transformation": "class-transformer",
+            "swagger_integration": true,
+            "examples": {
+                "create_user_dto": {
+                    "fields": [
+                        "email",
+                        "password",
+                        "name"
+                    ],
+                    "validations": [
+                        "IsEmail",
+                        "MinLength",
+                        "IsNotEmpty"
+                    ]
+                }
+            }
+        },
+        "entity_generator": {
+            "description": "Génère les entités de base de données",
+            "decorators": [
+                "@Entity",
+                "@Column",
+                "@PrimaryGeneratedColumn"
+            ],
+            "relationships": [
+                "@OneToMany",
+                "@ManyToOne",
+                "@ManyToMany"
+            ],
+            "tenant_isolation": {
+                "tenant_id_column": "mandatory",
+                "tenant_filter": "automatic"
+            }
+        },
+        "service_generator": {
+            "description": "Génère les services métier",
+            "patterns": [
+                "Repository",
+                "Service",
+                "Factory"
+            ],
+            "features": {
+                "dependency_injection": true,
+                "error_handling": true,
+                "logging": true,
+                "caching": true
+            }
+        }
+    },
+    "testing_tools": {
+        "unit_test_generator": {
+            "description": "Génère tests unitaires avec Jest",
+            "framework": "jest",
+            "coverage_target": "85%",
+            "mocking": {
+                "database": "in-memory",
+                "external_services": "mock_providers"
+            }
+        },
+        "integration_test_setup": {
+            "description": "Configuration tests d'intégration",
+            "database": "test_container",
+            "features": {
+                "test_database": "separate_instance",
+                "data_seeding": "before_each_test",
+                "cleanup": "after_each_test"
+            }
+        },
+        "e2e_test_framework": {
+            "description": "Tests end-to-end avec Supertest",
+            "tools": [
+                "supertest",
+                "test-containers"
+            ],
+            "scenarios": [
+                "auth_flow_complete",
+                "multi_tenant_isolation",
+                "permission_checks"
+            ]
+        }
+    },
+    "graphql_integration": {
+        "apollo_server_setup": {
+            "description": "Configuration Apollo Server avec NestJS",
+            "features": {
+                "code_first": true,
+                "playground": "development_only",
+                "introspection": "development_only",
+                "subscriptions": true
+            }
+        },
+        "resolver_generator": {
+            "description": "Génère resolvers GraphQL",
+            "types": [
+                "Query",
+                "Mutation",
+                "Subscription"
+            ],
+            "decorators": [
+                "@Resolver",
+                "@Query",
+                "@Mutation",
+                "@Args"
+            ],
+            "validation": "input_validation_pipes"
+        },
+        "schema_management": {
+            "description": "Gestion du schéma GraphQL",
+            "auto_generation": true,
+            "versioning": "schema_registry",
+            "breaking_changes": "detection_and_prevention"
+        }
+    },
+    "security_features": {
+        "multi_tenant_middleware": {
+            "description": "Middleware d'isolation multi-tenant",
+            "implementation": {
+                "tenant_extraction": "from_jwt_or_header",
+                "request_scoping": "automatic_filtering",
+                "validation": "tenant_access_verification"
+            }
+        },
+        "authentication_guards": {
+            "description": "Guards d'authentification et autorisation",
+            "types": [
+                "JwtAuthGuard",
+                "RolesGuard",
+                "TenantAccessGuard",
+                "ResourceOwnershipGuard"
+            ]
+        },
+        "input_validation": {
+            "description": "Validation complète des entrées",
+            "libraries": [
+                "class-validator",
+                "joi"
+            ],
+            "features": {
+                "sanitization": true,
+                "custom_validators": true,
+                "error_formatting": true
+            }
+        }
+    },
+    "monitoring_integration": {
+        "logging": {
+            "library": "winston",
+            "levels": [
+                "error",
+                "warn",
+                "info",
+                "debug"
+            ],
+            "format": "json",
+            "tenant_context": "included"
+        },
+        "metrics": {
+            "library": "prometheus",
+            "custom_metrics": [
+                "api_request_duration",
+                "tenant_active_users",
+                "database_query_time"
+            ]
+        },
+        "health_checks": {
+            "endpoints": [
+                "/health",
+                "/health/database",
+                "/health/external"
+            ],
+            "monitoring": "kubernetes_probes"
+        }
+    },
+    "deployment_config": {
+        "docker_optimization": {
+            "multi_stage_builds": true,
+            "node_modules_caching": true,
+            "production_optimizations": true
+        },
+        "environment_config": {
+            "config_service": "nestjs_config",
+            "validation": "joi_schemas",
+            "secrets_management": "kubernetes_secrets"
+        }
+    }
+}

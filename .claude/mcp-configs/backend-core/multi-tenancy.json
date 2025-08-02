@@ -1,0 +1,27 @@
+{
+    "mcp_name": "multi-tenancy-isolation-mcp",
+    "version": "1.0.0",
+    "description": "Outils d'isolation stricte des données par tenant pour WikiPro",
+    "tenant_isolation": {
+        "strategy": "tenant_id_filter",
+        "enforcement": "mandatory",
+        "validation": "automatic"
+    },
+    "database_isolation": {
+        "postgres_rls": {
+            "enabled": true,
+            "policies": [
+                "CREATE POLICY tenant_isolation ON {table} FOR ALL USING (tenant_id = current_setting('app.current_tenant_id')::UUID)"
+            ]
+        },
+        "query_filtering": {
+            "automatic_tenant_filter": true,
+            "middleware": "TenantMiddleware"
+        }
+    },
+    "security_rules": [
+        "Every query must include tenant_id filter",
+        "Cross-tenant access attempts must fail",
+        "Admin users scoped to their tenant only"
+    ]
+}
