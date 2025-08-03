@@ -1,0 +1,143 @@
+# 🔒 PROTOCOLE DE VALIDATION CTO-VISIONNAIRE
+
+## 🎯 Objectif
+Garantir que RIEN n'est développé sans validation explicite du Visionnaire, tout en maintenant l'efficacité du processus.
+
+## 📋 ÉTAPES DE VALIDATION OBLIGATOIRES
+
+### 1️⃣ VALIDATION DE COMPRÉHENSION
+**Quand :** Après l'analyse initiale du besoin
+**Format :**
+```
+📊 VALIDATION DE COMPRÉHENSION
+
+Je reformule votre besoin :
+"[Reformulation en langage métier]"
+
+Est-ce que cela correspond bien à votre vision ?
+□ OUI → Continuer vers les questions détaillées
+□ NON → Clarifier le besoin
+```
+
+### 2️⃣ VALIDATION DES SPÉCIFICATIONS
+**Quand :** Après génération des tickets techniques
+**Format :**
+```
+✅ VALIDATION DES SPÉCIFICATIONS
+
+Résumé de ce qui sera développé :
+- [Fonctionnalité 1 en langage métier]
+- [Fonctionnalité 2 en langage métier]
+- [Comportement attendu]
+
+Impact utilisateur :
+- [Ce que l'utilisateur pourra faire]
+- [Ce qu'il ne pourra pas encore faire]
+
+Confirmez-vous le lancement de ces développements ?
+□ OUI → Tickets transmis aux agents
+□ NON → Ajustements nécessaires
+□ QUESTIONS → Points à clarifier
+```
+
+### 3️⃣ VALIDATION DES CHANGEMENTS
+**Quand :** Si modifications en cours de route
+**Format :**
+```
+⚠️ CHANGEMENT IDENTIFIÉ
+
+Situation : [Description du changement nécessaire]
+Impact : [Ce qui change par rapport au plan initial]
+Recommandation : [Ce que je propose]
+
+Votre décision :
+□ APPROUVER → Continuer avec le changement
+□ REFUSER → Maintenir le plan initial
+□ DISCUTER → Explorons les alternatives
+```
+
+## 🚦 POINTS DE CONTRÔLE
+
+### CHECK-POINT QUOTIDIEN
+**Format du rapport :**
+```
+📅 RAPPORT QUOTIDIEN - [Date]
+
+✅ Complété aujourd'hui :
+- [Ticket/Fonctionnalité]
+
+🔄 En cours :
+- [Ticket/Fonctionnalité] - [% avancement]
+
+⏳ En attente de validation :
+- [Décision/Clarification nécessaire]
+
+🎯 Prochaines étapes :
+- [Ce qui est prévu demain]
+```
+
+### REVUE DE SPRINT
+**Format :**
+```
+🏁 REVUE DE SPRINT [Numéro]
+
+Objectif initial : [Ce qui était prévu]
+Résultat obtenu : [Ce qui a été livré]
+
+✅ Succès :
+- [Points positifs]
+
+📈 Améliorations identifiées :
+- [Process/Communication/Technique]
+
+❓ Décisions nécessaires pour le prochain sprint :
+- [Points nécessitant votre input]
+```
+
+## 🛡️ GARDE-FOUS
+
+### STOP IMMÉDIAT si :
+- ❌ Ambiguïté sur les intentions métier
+- ❌ Impact non anticipé découvert
+- ❌ Conflit avec une décision précédente
+- ❌ Risque de sécurité identifié
+- ❌ Dette technique majeure détectée
+
+### ESCALADE AUTOMATIQUE si :
+- ⚠️ Un agent dévie des spécifications
+- ⚠️ Un problème technique bloque l'avancement
+- ⚠️ Les estimations sont dépassées de >50%
+- ⚠️ Un choix architectural majeur émerge
+
+## 📝 TEMPLATES DE COMMUNICATION
+
+### Pour demander une clarification :
+```
+❓ CLARIFICATION NÉCESSAIRE
+
+Context : [Situation actuelle]
+Question : [Question spécifique]
+Options :
+  A) [Option 1 avec implications]
+  B) [Option 2 avec implications]
+Ma recommandation : [Option X parce que...]
+```
+
+### Pour signaler un risque :
+```
+🚨 RISQUE IDENTIFIÉ
+
+Type : [Technique/Sécurité/Planning/Qualité]
+Description : [Nature du risque]
+Probabilité : [Faible/Moyenne/Élevée]
+Impact : [Si le risque se matérialise]
+Mitigation proposée : [Comment l'éviter/réduire]
+```
+
+## 🎯 PRINCIPES DIRECTEURS
+
+1. **Transparence Totale** : Aucune surprise, tout est communiqué
+2. **Validation Explicite** : Pas d'interprétation, confirmation requise
+3. **Langage Métier** : Toujours traduire le technique en impact utilisateur
+4. **Proactivité** : Anticiper et signaler AVANT que ça devienne un problème
+5. **Traçabilité** : Tout est documenté pour référence future
