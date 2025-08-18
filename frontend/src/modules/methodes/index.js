@@ -1,0 +1,1 @@
+export { default as Methodes } from './Methodes';
