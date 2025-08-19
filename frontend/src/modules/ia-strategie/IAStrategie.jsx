@@ -1,6 +1,5 @@
-import React from 'react';
-import { useIAStrategie } from './hooks/useIAStrategie';
 import { appData } from '../../data.js';
+import { useIAStrategie } from './hooks/useIAStrategie';
 
 /**
  * Module IAStrategie - Interface de Rédaction IA WikiPro - Style Gemini épuré
@@ -20,7 +19,7 @@ const IAStrategie = () => {
     handleGenerate,
     handleKeyPress
   } = useIAStrategie();
-
+  // eslint-disable-next-line no-unused-vars
   const dataConnectors = {
     references: `Données disponibles : ${appData.references.length} références d'études`,
     competences: `${appData.competences.length} compétences répertoriées`,
@@ -29,10 +28,10 @@ const IAStrategie = () => {
   };
 
   return (
-    <div style={{height: '100vh', display: 'flex', backgroundColor: 'var(--color-bg-subtle)'}}>
+    <div style={{ height: '100vh', display: 'flex', backgroundColor: 'var(--color-bg-subtle)' }}>
       {/* Zone de saisie principale */}
-      <div style={{flex: showCanvas ? '1' : '1', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--color-surface)', borderRight: showCanvas ? '1px solid var(--color-border)' : 'none'}}>
-        
+      <div style={{ flex: showCanvas ? '1' : '1', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--color-surface)', borderRight: showCanvas ? '1px solid var(--color-border)' : 'none' }}>
+
         {/* Header avec bandeau coloré */}
         <div style={{
           background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-teal-400) 50%, var(--color-teal-600) 100%)',
@@ -49,32 +48,32 @@ const IAStrategie = () => {
             backgroundImage: 'radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 50%)',
             pointerEvents: 'none'
           }}></div>
-          
+
           <div style={{
-            padding: 'var(--space-24)', 
+            padding: 'var(--space-24)',
             borderBottom: '1px solid rgba(255,255,255,0.1)',
             position: 'relative',
             zIndex: 1
           }}>
-            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-              <div style={{display: 'flex', alignItems: 'center', gap: 'var(--space-16)'}}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-16)' }}>
                 <div style={{
-                  width: '48px', 
-                  height: '48px', 
-                  borderRadius: '50%', 
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
                   background: 'rgba(255, 255, 255, 0.2)',
                   backdropFilter: 'blur(10px)',
-                  display: 'flex', 
-                  alignItems: 'center', 
+                  display: 'flex',
+                  alignItems: 'center',
                   justifyContent: 'center',
                   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.2)'
                 }}>
-                  <i className="fas fa-brain" style={{color: 'white', fontSize: '20px'}}></i>
+                  <i className="fas fa-brain" style={{ color: 'white', fontSize: '20px' }}></i>
                 </div>
                 <h2 style={{
-                  margin: '0', 
-                  fontSize: 'var(--font-size-2xl)', 
+                  margin: '0',
+                  fontSize: 'var(--font-size-2xl)',
                   fontWeight: '600',
                   color: 'white',
                   textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
@@ -83,58 +82,58 @@ const IAStrategie = () => {
                   Studio d'IA WikiPro
                 </h2>
               </div>
-            
-            {/* Sélecteur IA avec couleurs */}
-            <div style={{display: 'flex', alignItems: 'center', gap: 'var(--space-8)'}}>
-              <select 
-                value={selectedModel} 
-                onChange={(e) => setSelectedModel(e.target.value)}
-                style={{
-                  padding: 'var(--space-8) var(--space-12)',
-                  border: '2px solid var(--color-primary)',
-                  borderRadius: 'var(--radius-lg)',
-                  backgroundColor: 'var(--color-surface)',
-                  fontSize: 'var(--font-size-sm)',
-                  cursor: 'pointer',
-                  color: 'var(--color-text-primary)',
-                  fontWeight: '500',
-                  boxShadow: 'var(--shadow-xs)'
-                }}
-              >
-                {aiModels.map(model => (
-                  <option key={model.id} value={model.id}>
-                    {model.icon} {model.name}
-                  </option>
-                ))}
-              </select>
-              
-              {showCanvas && (
-                <button
-                  onClick={() => setShowCanvas(false)}
+
+              {/* Sélecteur IA avec couleurs */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
+                <select
+                  value={selectedModel}
+                  onChange={(e) => setSelectedModel(e.target.value)}
                   style={{
-                    padding: 'var(--space-8)',
-                    backgroundColor: 'var(--color-error)',
-                    border: 'none',
-                    borderRadius: 'var(--radius-md)',
+                    padding: 'var(--space-8) var(--space-12)',
+                    border: '2px solid var(--color-primary)',
+                    borderRadius: 'var(--radius-lg)',
+                    backgroundColor: 'var(--color-surface)',
+                    fontSize: 'var(--font-size-sm)',
                     cursor: 'pointer',
-                    color: 'white',
-                    transition: 'all 0.2s'
+                    color: 'var(--color-text-primary)',
+                    fontWeight: '500',
+                    boxShadow: 'var(--shadow-xs)'
                   }}
                 >
-                  <i className="fas fa-times"></i>
-                </button>
-              )}
+                  {aiModels.map(model => (
+                    <option key={model.id} value={model.id}>
+                      {model.icon} {model.name}
+                    </option>
+                  ))}
+                </select>
+
+                {showCanvas && (
+                  <button
+                    onClick={() => setShowCanvas(false)}
+                    style={{
+                      padding: 'var(--space-8)',
+                      backgroundColor: 'var(--color-error)',
+                      border: 'none',
+                      borderRadius: 'var(--radius-md)',
+                      cursor: 'pointer',
+                      color: 'white',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Zone de saisie centrale */}
-        <div style={{flex: 1, display: 'flex', flexDirection: 'column', padding: 'var(--space-32)', justifyContent: 'center', alignItems: 'center'}}>
-          <div style={{width: '100%', maxWidth: '700px', textAlign: 'center'}}>
-            <h3 style={{marginBottom: 'var(--space-24)', fontSize: 'var(--font-size-xl)', fontWeight: '600', color: 'white', textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'}}>
-              Que souhaitez-vous créer aujourd'hui ?
-            </h3>
-            <textarea
+          {/* Zone de saisie centrale */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: 'var(--space-32)', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ width: '100%', maxWidth: '700px', textAlign: 'center' }}>
+              <h3 style={{ marginBottom: 'var(--space-24)', fontSize: 'var(--font-size-xl)', fontWeight: '600', color: 'white', textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)' }}>
+                Que souhaitez-vous créer aujourd'hui ?
+              </h3>
+              <textarea
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={handleKeyPress}
@@ -166,28 +165,28 @@ Utilisez Ctrl+Entrée pour générer"
                   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                 }}
               />
-              
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'var(--space-16)', textAlign: 'left'}}>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'var(--space-16)', textAlign: 'left' }}>
                 <div style={{
-                  display: 'flex', 
-                  alignItems: 'center', 
+                  display: 'flex',
+                  alignItems: 'center',
                   gap: 'var(--space-8)',
-                  fontSize: 'var(--font-size-sm)', 
+                  fontSize: 'var(--font-size-sm)',
                   color: 'white'
                 }}>
                   <div style={{
-                    width: '10px', 
-                    height: '10px', 
-                    borderRadius: '50%', 
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '50%',
                     backgroundColor: 'var(--color-success)',
                     boxShadow: '0 0 0 2px rgba(34, 197, 94, 0.3)'
                   }}></div>
-                  <span style={{fontSize: 'var(--font-size-sm)', fontWeight: '500', color: 'white'}}>
+                  <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: '500', color: 'white' }}>
                     Connecté aux données WikiPro • {aiModels.find(m => m.id === selectedModel)?.name}
                   </span>
                 </div>
-                
-                <div style={{display: 'flex', gap: 'var(--space-8)'}}>
+
+                <div style={{ display: 'flex', gap: 'var(--space-8)' }}>
                   {showCanvas && (
                     <button
                       onClick={() => setShowCanvas(false)}
@@ -207,7 +206,7 @@ Utilisez Ctrl+Entrée pour générer"
                       <i className="fas fa-eye-slash"></i> Masquer Canvas
                     </button>
                   )}
-                  
+
                   <button
                     onClick={handleGenerate}
                     disabled={!inputText.trim() || isGenerating}
@@ -230,7 +229,7 @@ Utilisez Ctrl+Entrée pour générer"
                   >
                     {isGenerating ? (
                       <>
-                        <div style={{width: '16px', height: '16px', border: '2px solid currentColor', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite'}}></div>
+                        <div style={{ width: '16px', height: '16px', border: '2px solid currentColor', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
                         Génération...
                       </>
                     ) : (
@@ -246,114 +245,114 @@ Utilisez Ctrl+Entrée pour générer"
           </div>
         </div>
 
-      {/* Canvas de rédaction */}
-      {showCanvas && (
-        <div style={{flex: '1', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--color-surface)', borderLeft: '3px solid var(--color-primary)'}}>
-          <div style={{
-            padding: 'var(--space-16)', 
-            borderBottom: '1px solid var(--color-border)', 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center',
-            background: 'linear-gradient(90deg, var(--color-primary) 0%, var(--color-teal-400) 100%)',
-            color: 'white'
-          }}>
-            <h3 style={{margin: '0', fontSize: 'var(--font-size-lg)', fontWeight: '500', display: 'flex', alignItems: 'center', gap: 'var(--space-8)'}}>
-              <div style={{
-                width: '28px',
-                height: '28px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <i className="fas fa-edit" style={{fontSize: '14px'}}></i>
+        {/* Canvas de rédaction */}
+        {showCanvas && (
+          <div style={{ flex: '1', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--color-surface)', borderLeft: '3px solid var(--color-primary)' }}>
+            <div style={{
+              padding: 'var(--space-16)',
+              borderBottom: '1px solid var(--color-border)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              background: 'linear-gradient(90deg, var(--color-primary) 0%, var(--color-teal-400) 100%)',
+              color: 'white'
+            }}>
+              <h3 style={{ margin: '0', fontSize: 'var(--font-size-lg)', fontWeight: '500', display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
+                <div style={{
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <i className="fas fa-edit" style={{ fontSize: '14px' }}></i>
+                </div>
+                Canvas de rédaction
+              </h3>
+              <div style={{ display: 'flex', gap: 'var(--space-8)' }}>
+                <button style={{
+                  padding: 'var(--space-8)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: 'var(--radius-md)',
+                  cursor: 'pointer',
+                  color: 'white',
+                  transition: 'all 0.2s'
+                }}>
+                  <i className="fas fa-copy"></i>
+                </button>
+                <button style={{
+                  padding: 'var(--space-8)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: 'var(--radius-md)',
+                  cursor: 'pointer',
+                  color: 'white',
+                  transition: 'all 0.2s'
+                }}>
+                  <i className="fas fa-download"></i>
+                </button>
+                <button style={{
+                  padding: 'var(--space-8)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: 'var(--radius-md)',
+                  cursor: 'pointer',
+                  color: 'white',
+                  transition: 'all 0.2s'
+                }}>
+                  <i className="fas fa-share"></i>
+                </button>
               </div>
-              Canvas de rédaction
-            </h3>
-            <div style={{display: 'flex', gap: 'var(--space-8)'}}>
-              <button style={{
-                padding: 'var(--space-8)', 
-                backgroundColor: 'rgba(255, 255, 255, 0.1)', 
-                border: '1px solid rgba(255, 255, 255, 0.2)', 
-                borderRadius: 'var(--radius-md)',
-                cursor: 'pointer', 
-                color: 'white',
-                transition: 'all 0.2s'
-              }}>
-                <i className="fas fa-copy"></i>
-              </button>
-              <button style={{
-                padding: 'var(--space-8)', 
-                backgroundColor: 'rgba(255, 255, 255, 0.1)', 
-                border: '1px solid rgba(255, 255, 255, 0.2)', 
-                borderRadius: 'var(--radius-md)',
-                cursor: 'pointer', 
-                color: 'white',
-                transition: 'all 0.2s'
-              }}>
-                <i className="fas fa-download"></i>
-              </button>
-              <button style={{
-                padding: 'var(--space-8)', 
-                backgroundColor: 'rgba(255, 255, 255, 0.1)', 
-                border: '1px solid rgba(255, 255, 255, 0.2)', 
-                borderRadius: 'var(--radius-md)',
-                cursor: 'pointer', 
-                color: 'white',
-                transition: 'all 0.2s'
-              }}>
-                <i className="fas fa-share"></i>
-              </button>
+            </div>
+
+            <div style={{ flex: 1, padding: 'var(--space-20)', overflow: 'auto' }}>
+              {isGenerating ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--color-text-muted)' }}>
+                  <div style={{
+                    width: '48px',
+                    height: '48px',
+                    border: '4px solid var(--color-bg-muted)',
+                    borderTop: '4px solid var(--color-primary)',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite',
+                    marginBottom: 'var(--space-20)',
+                    boxShadow: '0 4px 12px rgba(20, 184, 166, 0.2)'
+                  }}></div>
+                  <p style={{ fontSize: 'var(--font-size-base)', fontWeight: '500', marginBottom: 'var(--space-8)' }}>
+                    Génération du contenu avec {aiModels.find(m => m.id === selectedModel)?.name}...
+                  </p>
+                  <p style={{ fontSize: 'var(--font-size-sm)', opacity: 0.7 }}>
+                    <i className="fas fa-database" style={{ marginRight: 'var(--space-4)', color: 'var(--color-success)' }}></i>
+                    Analyse des données WikiPro en cours
+                  </p>
+                </div>
+              ) : (
+                <div style={{ height: '100%' }}>
+                  <textarea
+                    value={canvasContent}
+                    onChange={(e) => setCanvasContent(e.target.value)}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      border: 'none',
+                      outline: 'none',
+                      resize: 'none',
+                      fontSize: 'var(--font-size-sm)',
+                      lineHeight: '1.6',
+                      color: 'var(--color-text-primary)',
+                      backgroundColor: 'transparent',
+                      fontFamily: 'var(--font-mono), monospace'
+                    }}
+                    placeholder="Le contenu généré apparaîtra ici..."
+                  />
+                </div>
+              )}
             </div>
           </div>
-          
-          <div style={{flex: 1, padding: 'var(--space-20)', overflow: 'auto'}}>
-            {isGenerating ? (
-              <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--color-text-muted)'}}>
-                <div style={{
-                  width: '48px', 
-                  height: '48px', 
-                  border: '4px solid var(--color-bg-muted)', 
-                  borderTop: '4px solid var(--color-primary)', 
-                  borderRadius: '50%', 
-                  animation: 'spin 1s linear infinite', 
-                  marginBottom: 'var(--space-20)',
-                  boxShadow: '0 4px 12px rgba(20, 184, 166, 0.2)'
-                }}></div>
-                <p style={{fontSize: 'var(--font-size-base)', fontWeight: '500', marginBottom: 'var(--space-8)'}}>
-                  Génération du contenu avec {aiModels.find(m => m.id === selectedModel)?.name}...
-                </p>
-                <p style={{fontSize: 'var(--font-size-sm)', opacity: 0.7}}>
-                  <i className="fas fa-database" style={{marginRight: 'var(--space-4)', color: 'var(--color-success)'}}></i>
-                  Analyse des données WikiPro en cours
-                </p>
-              </div>
-            ) : (
-              <div style={{height: '100%'}}>
-                <textarea
-                  value={canvasContent}
-                  onChange={(e) => setCanvasContent(e.target.value)}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    border: 'none',
-                    outline: 'none',
-                    resize: 'none',
-                    fontSize: 'var(--font-size-sm)',
-                    lineHeight: '1.6',
-                    color: 'var(--color-text-primary)',
-                    backgroundColor: 'transparent',
-                    fontFamily: 'var(--font-mono), monospace'
-                  }}
-                  placeholder="Le contenu généré apparaîtra ici..."
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );
