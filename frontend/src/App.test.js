@@ -1,8 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders WikiPro application', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const headerElement = screen.getByText('Groupe Elan');
+  expect(headerElement).toBeInTheDocument();
+});
+
+test('renders navigation with Vue d\'ensemble tab', () => {
+  render(<App />);
+  const dashboardTab = screen.getByText(/Vue d'ensemble/i);
+  expect(dashboardTab).toBeInTheDocument();
 });

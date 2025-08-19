@@ -5,7 +5,12 @@
       "Bash(grep:*)",
       "Bash(npm start)",
       "Bash(npm run build:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(mkdir:*)",
+      "Bash(rm:*)",
+      "Bash(git add:*)",
+      "Bash(mv:*)",
+      "Bash(npm test:*)"
     ],
     "deny": []
   }

@@ -1,0 +1,1 @@
+export { default as CompetencesModule } from './CompetencesModule';
