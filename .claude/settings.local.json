@@ -10,7 +10,11 @@
       "Bash(rm:*)",
       "Bash(git add:*)",
       "Bash(mv:*)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(timeout 10 npm run start:dev)",
+      "Bash(timeout 8 npm run start:dev)"
     ],
     "deny": []
   }
