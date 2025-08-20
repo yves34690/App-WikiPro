@@ -1,0 +1,460 @@
+/**
+ * Styles pour l'intégration API - WikiPro
+ * Styles spécifiques aux nouveaux composants API
+ */
+
+/* ==========================================================================
+   Indicateur de statut API
+   ========================================================================== */
+.api-status {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 8px 8px;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.api-status.online {
+  background: rgba(16, 185, 129, 0.9);
+  color: white;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.api-status.offline,
+.api-status.error {
+  background: rgba(239, 68, 68, 0.95);
+  color: white;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.api-status.checking {
+  background: rgba(245, 158, 11, 0.9);
+  color: white;
+  opacity: 1;
+}
+
+.api-status-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.retry-api-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: all 0.2s ease;
+}
+
+.retry-api-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================================================
+   Formulaire de connexion amélioré
+   ========================================================================== */
+.field-error {
+  color: var(--color-danger);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.form-group input.error {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.demo-credentials {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.demo-credentials summary {
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  outline: none;
+}
+
+.credentials-info {
+  background: var(--background-tertiary);
+  padding: 1rem;
+  border-radius: 6px;
+  border-left: 3px solid var(--color-primary);
+}
+
+.credentials-info p {
+  margin: 0.25rem 0;
+  font-size: 0.8rem;
+  font-family: monospace;
+}
+
+/* ==========================================================================
+   Badge de module
+   ========================================================================== */
+.module-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--color-warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.legacy-module {
+  position: relative;
+}
+
+/* ==========================================================================
+   Indicateurs de chargement raffinés
+   ========================================================================== */
+.refetch-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--color-primary);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  border-left: 3px solid var(--color-primary);
+}
+
+/* ==========================================================================
+   Panel de debug
+   ========================================================================== */
+.debug-panel {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  max-width: 300px;
+}
+
+.debug-panel details {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.debug-panel summary {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+.debug-content {
+  padding: 1rem;
+  font-size: 0.8rem;
+}
+
+.debug-content p {
+  margin: 0.5rem 0;
+}
+
+/* ==========================================================================
+   Améliorations des en-têtes de module
+   ========================================================================== */
+.references-header,
+.tendances-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header-left h2,
+.results-summary h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.header-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0.25rem 0 0 0;
+}
+
+.count {
+  color: var(--color-primary);
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+.clear-filters-btn {
+  background: var(--color-danger);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.clear-filters-btn:hover {
+  background: var(--color-danger-dark);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Contrôles de période et tri
+   ========================================================================== */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.period-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.period-select {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--background-secondary);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.refresh-btn,
+.floating-refresh-btn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.refresh-btn:hover,
+.floating-refresh-btn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.floating-refresh-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   Cartes d'insights
+   ========================================================================== */
+.insights-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.insight-card {
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.insight-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.insight-content h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.insight-content p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.insight-value {
+  display: inline-block;
+  background: var(--color-primary);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+/* ==========================================================================
+   Section prédictions
+   ========================================================================== */
+.predictions-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.predictions-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.predictions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.prediction-card {
+  background: linear-gradient(135deg, 
+    rgba(99, 102, 241, 0.05) 0%, 
+    rgba(168, 85, 247, 0.05) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.prediction-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+}
+
+.prediction-card p {
+  margin: 0 0 1rem 0;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.prediction-metrics {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.metric {
+  background: var(--background-tertiary);
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.metric strong {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Informations de pagination
+   ========================================================================== */
+.pagination-info {
+  text-align: center;
+  padding: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border-color);
+  margin-top: 1rem;
+}
+
+/* ==========================================================================
+   Variables CSS pour les couleurs
+   ========================================================================== */
+:root {
+  --color-warning: #f59e0b;
+  --color-danger-dark: #b91c1c;
+  --color-primary-dark: #1d4ed8;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 768px) {
+  .references-header,
+  .tendances-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .insights-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .predictions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .floating-refresh-btn {
+    bottom: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+  }
+
+  .debug-panel {
+    bottom: 0.5rem;
+    right: 0.5rem;
+    left: 0.5rem;
+    max-width: none;
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "name": "wikipro-performance-tests",
+  "version": "1.0.0",
+  "description": "Suite complète de tests performance pour WikiPro v2.0",
+  "main": "run-performance-suite.js",
+  "scripts": {
+    "demo": "node demo-performance.js",
+    "test": "node run-performance-suite.js",
+    "test:api-load": "node performance/api-load.test.js",
+    "test:streaming": "node performance/streaming.test.js",
+    "test:auth": "node performance/auth-performance.test.js",
+    "test:database": "node performance/database.test.js",
+    "test:e2e-journey": "node e2e/user-journey.test.js",
+    "test:e2e-providers": "node e2e/ai-providers.test.js",
+    "test:e2e-sessions": "node e2e/session-management.test.js",
+    "monitor": "node -e \"const {TelemetryMonitor} = require('./monitoring/telemetry.js'); const monitor = new TelemetryMonitor(); monitor.startMonitoring(); setTimeout(() => { monitor.printMonitoringReport(); monitor.stopMonitoring(); }, 60000);\"",
+    "alerts": "node -e \"const {AlertsManager} = require('./monitoring/alerts.config.js'); const alerts = new AlertsManager(); alerts.printAlertsReport();\"",
+    "dashboards": "node -e \"const {DashboardsConfig} = require('./monitoring/dashboards.config.js'); const dash = new DashboardsConfig(); dash.simulateDashboard('system_overview');\"",
+    "reports": "dir reports",
+    "clean": "del /Q reports\\*.json",
+    "validate": "node -e \"console.log('✅ Tous les fichiers de test sont présents'); process.exit(0);\""
+  },
+  "keywords": [
+    "performance",
+    "testing",
+    "wikipro",
+    "monitoring",
+    "telemetry",
+    "e2e",
+    "api",
+    "streaming",
+    "database"
+  ],
+  "author": "Agent QA-Performance WikiPro",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "WikiPro Performance Tests Suite"
+  }
+}

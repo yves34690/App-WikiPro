@@ -1,0 +1,300 @@
+/**
+ * Styles pour le composant AuthGuard
+ */
+
+/* ==========================================================================
+   Composants d'authentification
+   ========================================================================== */
+.auth-guard-login,
+.auth-guard-error,
+.auth-guard-forbidden {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem;
+  text-align: center;
+}
+
+.auth-guard-content {
+  max-width: 400px;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Icônes d'état
+   ========================================================================== */
+.auth-guard-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.auth-guard-login .auth-guard-icon {
+  color: var(--color-primary);
+}
+
+.auth-guard-error .auth-guard-icon.error,
+.auth-guard-forbidden .auth-guard-icon.error {
+  color: var(--color-danger);
+}
+
+/* ==========================================================================
+   Titres et textes
+   ========================================================================== */
+.auth-guard-content h2 {
+  margin: 0 0 1rem 0;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.auth-guard-content p {
+  margin: 0 0 2rem 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.auth-guard-content p:last-child {
+  margin-bottom: 2rem;
+}
+
+.auth-guard-content strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Actions et boutons
+   ========================================================================== */
+.auth-guard-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.auth-guard-content button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.auth-guard-content .btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.auth-guard-content .btn-primary:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.auth-guard-content .btn-secondary {
+  background: var(--background-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.auth-guard-content .btn-secondary:hover {
+  background: var(--background-tertiary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auth-guard-content button:active {
+  transform: translateY(0);
+}
+
+.auth-guard-content button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ==========================================================================
+   États spécifiques
+   ========================================================================== */
+
+/* État de connexion */
+.auth-guard-login {
+  background: linear-gradient(135deg, 
+    rgba(37, 99, 235, 0.05) 0%, 
+    rgba(147, 51, 234, 0.05) 100%);
+}
+
+.auth-guard-login .auth-guard-content {
+  background: var(--background-primary);
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+}
+
+/* État d'erreur */
+.auth-guard-error {
+  background: linear-gradient(135deg, 
+    rgba(220, 38, 38, 0.05) 0%, 
+    rgba(239, 68, 68, 0.05) 100%);
+}
+
+.auth-guard-error .auth-guard-content {
+  background: var(--background-primary);
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-danger-light);
+  box-shadow: var(--shadow-lg);
+}
+
+/* État interdit */
+.auth-guard-forbidden {
+  background: linear-gradient(135deg, 
+    rgba(245, 101, 101, 0.05) 0%, 
+    rgba(251, 146, 60, 0.05) 100%);
+}
+
+.auth-guard-forbidden .auth-guard-content {
+  background: var(--background-primary);
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-warning-light);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ==========================================================================
+   États de chargement d'authentification
+   ========================================================================== */
+.auth-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 2rem;
+}
+
+.auth-required {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+.auth-guard-login,
+.auth-guard-error,
+.auth-guard-forbidden {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-guard-icon {
+  animation: bounceIn 0.6s ease-out 0.2s both;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ==========================================================================
+   Variables CSS
+   ========================================================================== */
+:root {
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+  --color-danger: #dc2626;
+  --color-danger-light: rgba(220, 38, 38, 0.2);
+  --color-warning-light: rgba(245, 101, 101, 0.2);
+  --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 640px) {
+  .auth-guard-login,
+  .auth-guard-error,
+  .auth-guard-forbidden {
+    padding: 1rem;
+    min-height: 50vh;
+  }
+
+  .auth-guard-content {
+    max-width: 100%;
+  }
+
+  .auth-guard-login .auth-guard-content,
+  .auth-guard-error .auth-guard-content,
+  .auth-guard-forbidden .auth-guard-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .auth-guard-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .auth-guard-content h2 {
+    font-size: 1.25rem;
+  }
+
+  .auth-guard-content button {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+    min-width: 100px;
+  }
+
+  .auth-guard-actions {
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-guard-actions {
+    flex-direction: column;
+  }
+
+  .auth-guard-content button {
+    width: 100%;
+  }
+}
