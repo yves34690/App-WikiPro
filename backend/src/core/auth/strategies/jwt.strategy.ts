@@ -1,14 +1,14 @@
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService, JwtPayload } from '../auth.service';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@core/config/config.service';
+import { AuthService, JwtPayload, UserEntity } from '../auth.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private authService: AuthService,
-    configService: ConfigService,
+    private readonly configService: ConfigService,
+    private readonly authService: AuthService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -17,11 +17,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<JwtPayload> {
-    const user = await this.authService.validateUser(payload);
-    if (!user) {
-      throw new UnauthorizedException();
+  async validate(payload: JwtPayload): Promise<UserEntity> {
+    try {
+      const user = await this.authService.validateJwtPayload(payload);
+      if (!user || !user.isActive) {
+        throw new UnauthorizedException('Utilisateur non valide ou inactif');
+      }
+      return user;
+    } catch (error) {
+      throw new UnauthorizedException('Token JWT invalide');
     }
-    return user;
   }
 }

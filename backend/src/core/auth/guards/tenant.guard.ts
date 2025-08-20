@@ -36,7 +36,7 @@ export class TenantGuard implements CanActivate {
     // Vérification de l'isolation tenant
     if (user.tenantId !== requiredTenant) {
       this.logger.warn(
-        `Tentative d'accès cross-tenant: utilisateur ${user.email} (tenant: ${user.tenantId}) ` +
+        `Tentative d'accès cross-tenant: utilisateur ${user.username} (tenant: ${user.tenantId}) ` +
         `tentant d'accéder aux ressources du tenant ${requiredTenant}`
       );
       throw new ForbiddenException('Accès interdit - Violation de l\'isolation tenant');

@@ -1,106 +1,22 @@
-import { plainToClass, Transform } from 'class-transformer';
-import { IsOptional, IsString, IsNumber, IsBoolean, validateSync, Min, Max } from 'class-validator';
+import * as Joi from 'joi';
 
-export class EnvironmentVariables {
-  @IsOptional()
-  @IsNumber()
-  @Transform(({ value }) => parseInt(value, 10))
-  @Min(1000)
-  @Max(65535)
-  PORT = 3001;
+export const validationSchema = Joi.object({
+  JWT_SECRET: Joi.string().required(),
+  JWT_EXPIRATION_TIME: Joi.string().required(),
+  
+  // IA Providers API Keys
+  GEMINI_API_KEY: Joi.string().optional(),
+  OPENAI_API_KEY: Joi.string().optional(),
+  ANTHROPIC_API_KEY: Joi.string().optional(),
+  MISTRAL_API_KEY: Joi.string().optional(),
 
-  @IsOptional()
-  @IsString()
-  NODE_ENV = 'development';
+  // IA Configuration
+  OPENAI_MODEL: Joi.string().default('gpt-4o'),
+  GEMINI_MODEL: Joi.string().default('gemini-2.5-flash-002'),
+  ANTHROPIC_MODEL: Joi.string().default('claude-3-5-sonnet-20241022'),
+  MISTRAL_MODEL: Joi.string().default('mistral-large-latest'),
 
-  @IsOptional()
-  @IsString()
-  CORS_ORIGIN = 'http://localhost:3000';
-
-  @IsOptional()
-  @IsString()
-  DB_HOST = 'localhost';
-
-  @IsOptional()
-  @IsNumber()
-  @Transform(({ value }) => parseInt(value, 10))
-  DB_PORT = 5432;
-
-  @IsOptional()
-  @IsString()
-  DB_USERNAME = 'postgres';
-
-  @IsOptional()
-  @IsString()
-  DB_PASSWORD = '';
-
-  @IsOptional()
-  @IsString()
-  DB_DATABASE = 'wikipro';
-
-  @IsOptional()
-  @IsString()
-  JWT_SECRET = 'dev-secret-change-in-production';
-
-  @IsOptional()
-  @IsString()
-  JWT_EXPIRATION = '24h';
-
-  @IsOptional()
-  @IsNumber()
-  @Transform(({ value }) => parseInt(value, 10))
-  @Min(4)
-  @Max(16)
-  BCRYPT_ROUNDS = 12;
-
-  @IsOptional()
-  @IsString()
-  GEMINI_API_KEY = '';
-
-  @IsOptional()
-  @IsString()
-  GEMINI_MODEL = 'gemini-2.5-flash-002';
-
-  @IsOptional()
-  @IsNumber()
-  @Transform(({ value }) => parseInt(value, 10))
-  @Min(100)
-  @Max(8192)
-  AI_MAX_TOKENS = 4096;
-
-  @IsOptional()
-  @IsNumber()
-  @Transform(({ value }) => parseFloat(value))
-  @Min(0)
-  @Max(2)
-  AI_TEMPERATURE = 0.7;
-
-  @IsOptional()
-  @IsBoolean()
-  @Transform(({ value }) => value === 'true')
-  TELEMETRY_ENABLED = false;
-
-  @IsOptional()
-  @IsString()
-  TELEMETRY_ENDPOINT?: string;
-
-  @IsOptional()
-  @IsString()
-  TELEMETRY_API_KEY?: string;
-}
-
-export function configValidation(config: Record<string, unknown>) {
-  const validatedConfig = plainToClass(EnvironmentVariables, config, {
-    enableImplicitConversion: true,
-  });
-
-  const errors = validateSync(validatedConfig, {
-    skipMissingProperties: false,
-  });
-
-  if (errors.length > 0) {
-    throw new Error(`Configuration validation error: ${errors.toString()}`);
-  }
-
-  return validatedConfig;
-}
+  // IA Parameters
+  MAX_TOKENS: Joi.number().default(2048),
+  TEMPERATURE: Joi.number().min(0).max(2).default(0.7),
+});

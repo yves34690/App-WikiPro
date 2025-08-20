@@ -8,7 +8,8 @@ import {
   ChatCompletionResponse,
   ChatMessage,
   EmbeddingRequest,
-  EmbeddingResponse
+  EmbeddingResponse,
+  StreamingTextGenerationRequest
 } from '@shared/interfaces/ai-provider.interface';
 import { ProviderConfig, ProviderCapabilities } from '@shared/interfaces/provider.interface';
 import { ConfigService } from '@core/config/config.service';
@@ -189,6 +190,74 @@ export class GeminiProvider extends BaseAiProvider {
       
       this.logger.error(`Erreur chat completion Gemini pour tenant ${tenantId}: ${error.message}`);
       this.handleError(error, 'Gemini chat completion');
+    }
+  }
+
+  async generateTextStream(
+    tenantId: string,
+    request: StreamingTextGenerationRequest
+  ): Promise<void> {
+    const startTime = Date.now();
+    let tokensUsed = 0;
+    let fullText = '';
+
+    try {
+      this.validateTenant(tenantId);
+      this.validateRequest(request);
+
+      const prompt = this.buildPrompt(request);
+      const config = this.buildGenerationConfig(request);
+
+      // Gemini streaming avec generateContentStream
+      const result = await this.model.generateContentStream({
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: config,
+      });
+
+      for await (const chunk of result.stream) {
+        const chunkText = chunk.text();
+        if (chunkText) {
+          fullText += chunkText;
+          request.onChunk?.(chunkText);
+        }
+      }
+
+      const responseTime = Date.now() - startTime;
+      tokensUsed = this.estimateTokens(request.prompt + fullText);
+
+      // Mise à jour des métriques
+      this.updateMetrics(responseTime, tokensUsed);
+
+      // Télémétrie
+      if (this.telemetryService) {
+        this.telemetryService.trackAiProviderCall(
+          tenantId,
+          this.name,
+          this.configService.ai.geminiModel,
+          tokensUsed,
+          responseTime
+        );
+      }
+
+      // Callback de completion
+      request.onComplete?.({
+        text: fullText,
+        tokensUsed,
+        finishReason: 'stop',
+        metadata: {
+          model: this.configService.ai.geminiModel,
+          responseTime,
+        },
+      });
+
+      this.logger.debug(`Streaming Gemini généré pour le tenant ${tenantId} (${responseTime}ms, ${tokensUsed} tokens)`);
+
+    } catch (error) {
+      const responseTime = Date.now() - startTime;
+      this.updateMetrics(responseTime, 0, true);
+      
+      this.logger.error(`Erreur streaming Gemini pour tenant ${tenantId}: ${error.message}`);
+      request.onError?.(error);
     }
   }
 
