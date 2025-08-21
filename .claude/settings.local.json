@@ -14,7 +14,10 @@
       "Bash(npm init:*)",
       "Bash(npm install:*)",
       "Bash(timeout 10 npm run start:dev)",
-      "Bash(timeout 8 npm run start:dev)"
+      "Bash(timeout 8 npm run start:dev)",
+      "Bash(npm run start:dev:*)",
+      "Bash(PORT=3002 npm start)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }

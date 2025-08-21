@@ -10,6 +10,7 @@ import { RegistryModule } from '@core/registry/registry.module';
 
 // Feature modules
 import { AiProvidersModule } from '@modules/ai-providers/ai-providers.module';
+import { ChatModule } from '@modules/chat/chat.module';
 
 // Controllers
 import { AppController } from './app.controller';
@@ -17,11 +18,7 @@ import { AppService } from './app.service';
 
 @Module({
   imports: [
-    // Configuration globale
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: ['.env.local', '.env'],
-    }),
+    
     
     // Rate limiting
     ThrottlerModule.forRoot([{
@@ -37,6 +34,7 @@ import { AppService } from './app.service';
 
     // Feature modules
     AiProvidersModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],
