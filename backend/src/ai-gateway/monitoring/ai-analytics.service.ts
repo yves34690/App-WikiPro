@@ -25,7 +25,9 @@ import {
   TestQuotaResultDto,
   ExportMetricsDto,
   ExportResponseDto,
-  ExportStatusDto
+  ExportStatusDto,
+  ExportFormat,
+  ExportMetricType
 } from './dto';
 
 /**
@@ -160,7 +162,7 @@ export class AIAnalyticsService {
       };
 
       // Mettre en cache
-      await this.redisService.setex(cacheKey, this.CACHE_TTL.STATS, JSON.stringify(result));
+      await this.redisService.set(cacheKey, result, this.CACHE_TTL.STATS);
       
       const duration = Date.now() - startTime;
       this.logger.log(`Tenant stats calculées en ${duration}ms pour ${query.tenantId}`);
@@ -279,7 +281,7 @@ export class AIAnalyticsService {
         }
       };
 
-      await this.redisService.setex(cacheKey, this.CACHE_TTL.STATS, JSON.stringify(result));
+      await this.redisService.set(cacheKey, result, this.CACHE_TTL.STATS);
       
       const duration = Date.now() - startTime;
       this.logger.log(`Global usage calculé en ${duration}ms`);
@@ -427,7 +429,7 @@ export class AIAnalyticsService {
         projections
       };
 
-      await this.redisService.setex(cacheKey, this.CACHE_TTL.STATS, JSON.stringify(result));
+      await this.redisService.set(cacheKey, result, this.CACHE_TTL.STATS);
       
       const duration = Date.now() - startTime;
       this.logger.log(`Cost analytics calculé en ${duration}ms pour ${filters.tenantId}`);
@@ -502,7 +504,7 @@ export class AIAnalyticsService {
         recommendations: this.generateConversationRecommendations(conversation, messages)
       };
 
-      await this.redisService.setex(cacheKey, this.CACHE_TTL.STATS, JSON.stringify(result));
+      await this.redisService.set(cacheKey, result, this.CACHE_TTL.STATS);
       return result;
     } catch (error) {
       this.logger.error(`Erreur analyse coût conversation ${conversationId}:`, error);
@@ -664,7 +666,7 @@ export class AIAnalyticsService {
         insights: this.generatePerformanceInsights(performanceMetrics)
       };
 
-      await this.redisService.setex(cacheKey, this.CACHE_TTL.STATS, JSON.stringify(result));
+      await this.redisService.set(cacheKey, result, this.CACHE_TTL.STATS);
       
       const duration = Date.now() - startTime;
       this.logger.log(`Performance metrics calculé en ${duration}ms pour ${filters.tenantId}`);
@@ -716,7 +718,7 @@ export class AIAnalyticsService {
         }))
       };
 
-      await this.redisService.setex(cacheKey, this.CACHE_TTL.QUOTAS, JSON.stringify(result));
+      await this.redisService.set(cacheKey, result, this.CACHE_TTL.QUOTAS);
       return result;
     } catch (error) {
       this.logger.error('Erreur métriques temps réel:', error);
@@ -871,7 +873,7 @@ export class AIAnalyticsService {
         }
       };
 
-      await this.redisService.setex(cacheKey, this.CACHE_TTL.QUOTAS, JSON.stringify(result));
+      await this.redisService.set(cacheKey, result, this.CACHE_TTL.QUOTAS);
       return result;
     } catch (error) {
       this.logger.error('Erreur quota status:', error);
@@ -1035,8 +1037,8 @@ export class AIAnalyticsService {
       completedAt: new Date(),
       metadata: {
         tenantId: 'unknown',
-        format: 'json',
-        metrics: ['cost']
+        format: ExportFormat.JSON,
+        metrics: [ExportMetricType.COST]
       },
       result: {
         fileName: `export-${exportId}.json`,
@@ -1114,7 +1116,7 @@ export class AIAnalyticsService {
       };
 
       // Cache court pour dashboard (1 minute)
-      await this.redisService.setex(cacheKey, this.CACHE_TTL.DASHBOARD, JSON.stringify(result));
+      await this.redisService.set(cacheKey, result, this.CACHE_TTL.DASHBOARD);
       
       const duration = Date.now() - startTime;
       this.logger.log(`Dashboard summary calculé en ${duration}ms pour ${tenantId}`);

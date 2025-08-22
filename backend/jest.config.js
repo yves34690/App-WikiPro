@@ -15,5 +15,6 @@ module.exports = {
     '^@core/(.*)$': '<rootDir>/core/$1',
     '^@modules/(.*)$': '<rootDir>/modules/$1',
     '^@shared/(.*)$': '<rootDir>/shared/$1',
+    '^@database/(.*)$': '<rootDir>/database/$1',
   },
 };

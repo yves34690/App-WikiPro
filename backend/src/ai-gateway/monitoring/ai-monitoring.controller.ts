@@ -135,8 +135,8 @@ export class AIMonitoringController {
   @Post('usage/export')
   async exportGlobalUsage(
     @Body() exportDto: ExportGlobalUsageDto,
-    @Headers('X-Admin-Access') adminAccess?: string,
-    @Res() res: Response
+    @Res() res: Response,
+    @Headers('X-Admin-Access') adminAccess?: string
   ): Promise<void> {
     if (!adminAccess || adminAccess !== 'true') {
       throw new HttpException('Accès administrateur requis', HttpStatus.FORBIDDEN);

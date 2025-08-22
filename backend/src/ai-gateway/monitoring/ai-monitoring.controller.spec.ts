@@ -10,7 +10,10 @@ import {
   PerformanceMetricsDto,
   QuotaStatusDto,
   ExportResponseDto,
-  RealTimePerformanceDto
+  RealTimePerformanceDto,
+  ExportFormat,
+  ExportPeriod,
+  ExportMetricType
 } from './dto';
 
 /**
@@ -794,9 +797,9 @@ describe('AIMonitoringController', () => {
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         metadata: {
           tenantId: mockTenantId,
-          format: 'json',
-          period: 'last_7d',
-          metricsIncluded: ['cost', 'performance'],
+          format: ExportFormat.JSON,
+          period: ExportPeriod.LAST_7D,
+          metricsIncluded: [ExportMetricType.COST, ExportMetricType.PERFORMANCE],
           recordCount: 150,
           generatedAt: new Date()
         },
@@ -817,9 +820,9 @@ describe('AIMonitoringController', () => {
 
       const exportDto = {
         tenantId: mockTenantId,
-        format: 'json' as const,
-        period: 'last_7d' as const,
-        metrics: ['cost', 'performance'] as const,
+        format: ExportFormat.JSON,
+        period: ExportPeriod.LAST_7D,
+        metrics: [ExportMetricType.COST, ExportMetricType.PERFORMANCE],
         includeRecommendations: true
       };
 
@@ -840,8 +843,8 @@ describe('AIMonitoringController', () => {
         completedAt: new Date(),
         metadata: {
           tenantId: mockTenantId,
-          format: 'json' as const,
-          metrics: ['cost'] as const
+          format: ExportFormat.JSON,
+          metrics: [ExportMetricType.COST]
         },
         result: {
           fileName: 'export.json',
