@@ -8,7 +8,11 @@ import ConnectionStatus from './ConnectionStatus';
 /**
  * Interface ChatGPT-like avec streaming WebSocket
  */
-const ChatInterface = () => {
+const ChatInterface = ({ 
+  conversationId = null, 
+  conversation = null, 
+  onConversationUpdate = () => {} 
+}) => {
   const {
     messages,
     inputText,
@@ -25,7 +29,7 @@ const ChatInterface = () => {
     clearConversation,
     testProvider,
     messagesEndRef
-  } = useChatInterface();
+  } = useChatInterface(conversationId, conversation, onConversationUpdate);
 
   return (
     <div style={{ 

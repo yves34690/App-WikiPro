@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CoreConfigModule } from '../core/config/config.module';
 import { RedisModule } from '../core/redis/redis.module';
+import { TelemetryModule } from '../core/telemetry/telemetry.module';
 
 // Entities pour analytics
 import { Message } from '../database/entities/message.entity';
@@ -34,8 +35,11 @@ export class AIGatewayModule {
         CoreConfigModule,
         ConfigModule,
         RedisModule,
-        // Import des entités nécessaires pour les analytics
-        TypeOrmModule.forFeature([Message, Conversation, User]),
+        TelemetryModule,
+        // Import des entités nécessaires pour les analytics (conditionnel)
+        ...(process.env.DATABASE_ENABLED !== 'false' ? [
+          TypeOrmModule.forFeature([Message, Conversation, User])
+        ] : []),
       ],
       providers: [
         // Configuration

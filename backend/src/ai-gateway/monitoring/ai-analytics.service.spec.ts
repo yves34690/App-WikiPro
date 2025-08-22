@@ -10,6 +10,7 @@ import {
   PerformanceFiltersDto,
   QuotaStatusQueryDto
 } from './dto';
+import { ExportPeriod, ExportFormat, ExportMetricType } from './dto/export-metrics.dto';
 
 /**
  * Tests complets pour AIAnalyticsService - TICKET-BACKEND-005
@@ -183,7 +184,7 @@ describe('AIAnalyticsService', () => {
   describe('getTenantStats', () => {
     const mockQuery: TenantStatsQueryDto = {
       tenantId: mockTenantId,
-      period: 'last_7d'
+      period: ExportPeriod.LAST_7D
     };
 
     beforeEach(() => {
@@ -302,15 +303,15 @@ describe('AIAnalyticsService', () => {
       const mockStats = {
         tenantId: mockTenantId,
         totalCostUsd: 125.50,
-        period: 'last_7d'
+        period: ExportPeriod.LAST_7D
       };
 
       jest.spyOn(service, 'getTenantStats').mockResolvedValue(mockStats as any);
 
       const exportDto = {
         tenantId: mockTenantId,
-        format: 'json' as const,
-        period: 'last_7d' as const
+        format: ExportFormat.JSON,
+        period: ExportPeriod.LAST_7D as const
       };
 
       const result = await service.exportTenantStats(exportDto);
@@ -326,7 +327,7 @@ describe('AIAnalyticsService', () => {
         totalCostUsd: 125.50,
         totalMessages: 340,
         avgResponseTimeMs: 1850,
-        period: 'last_7d'
+        period: ExportPeriod.LAST_7D
       };
 
       jest.spyOn(service, 'getTenantStats').mockResolvedValue(mockStats as any);
@@ -334,7 +335,7 @@ describe('AIAnalyticsService', () => {
       const exportDto = {
         tenantId: mockTenantId,
         format: 'csv' as const,
-        period: 'last_7d' as const
+        period: ExportPeriod.LAST_7D as const
       };
 
       const result = await service.exportTenantStats(exportDto);
@@ -349,7 +350,7 @@ describe('AIAnalyticsService', () => {
       const exportDto = {
         tenantId: mockTenantId,
         format: 'xlsx' as const,
-        period: 'last_7d' as const
+        period: ExportPeriod.LAST_7D as const
       };
 
       await expect(service.exportTenantStats(exportDto)).rejects.toThrow('Export XLSX pas encore implémenté');
@@ -510,7 +511,7 @@ describe('AIAnalyticsService', () => {
   describe('getPerformanceMetrics', () => {
     const mockFilters: PerformanceFiltersDto = {
       tenantId: mockTenantId,
-      period: 'last_7d'
+      period: ExportPeriod.LAST_7D
     };
 
     it('should return cached performance metrics when available', async () => {
@@ -743,9 +744,9 @@ describe('AIAnalyticsService', () => {
     it('should create export successfully', async () => {
       const exportDto = {
         tenantId: mockTenantId,
-        format: 'json' as const,
-        period: 'last_7d' as const,
-        metrics: ['cost', 'performance'] as const
+        format: ExportFormat.JSON,
+        period: ExportPeriod.LAST_7D as const,
+        metrics: [ExportMetricType.COST, ExportMetricType.PERFORMANCE] as const
       };
 
       const result = await service.exportMetrics(exportDto);
@@ -855,7 +856,7 @@ describe('AIAnalyticsService', () => {
       // Le service devrait continuer à fonctionner même si Redis échoue
       const result = await service.getTenantStats({
         tenantId: mockTenantId,
-        period: 'last_7d'
+        period: ExportPeriod.LAST_7D
       });
 
       expect(result).toBeDefined();
@@ -869,7 +870,7 @@ describe('AIAnalyticsService', () => {
 
       await expect(service.getTenantStats({
         tenantId: mockTenantId,
-        period: 'last_7d'
+        period: ExportPeriod.LAST_7D
       })).rejects.toThrow('Timeout');
     });
 
@@ -879,7 +880,7 @@ describe('AIAnalyticsService', () => {
 
       await expect(service.getTenantStats({
         tenantId: 'invalid-tenant',
-        period: 'last_7d'
+        period: ExportPeriod.LAST_7D
       })).rejects.toThrow('Tenant not found');
     });
   });
@@ -898,7 +899,7 @@ describe('AIAnalyticsService', () => {
       const startTime = Date.now();
       await service.getTenantStats({
         tenantId: mockTenantId,
-        period: 'last_7d'
+        period: ExportPeriod.LAST_7D
       });
       const duration = Date.now() - startTime;
 
@@ -913,7 +914,7 @@ describe('AIAnalyticsService', () => {
       const startTime = Date.now();
       await service.getTenantStats({
         tenantId: mockTenantId,
-        period: 'last_7d'
+        period: ExportPeriod.LAST_7D
       });
       const duration = Date.now() - startTime;
 

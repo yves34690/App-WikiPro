@@ -4,3 +4,5 @@ export { default as MessageList } from './MessageList';
 export { default as ChatInput } from './ChatInput';
 export { default as ProviderSelector } from './ProviderSelector';
 export { default as ConnectionStatus } from './ConnectionStatus';
+export { default as ConversationSidebar } from './ConversationSidebar';
+export { default as ConversationManager } from './ConversationManager';

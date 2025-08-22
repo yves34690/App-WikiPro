@@ -10,7 +10,17 @@ export class AppController {
   @Get()
   @ApiOperation({ summary: 'Health check endpoint' })
   @ApiResponse({ status: 200, description: 'Service is healthy' })
-  getHealth(): { status: string; timestamp: string; version: string } {
+  async getHealth(): Promise<{
+    status: string;
+    timestamp: string;
+    version: string;
+    ai?: {
+      status: string;
+      providers: number;
+      activeProvider: string;
+      lastCheck?: string;
+    };
+  }> {
     return this.appService.getHealth();
   }
 

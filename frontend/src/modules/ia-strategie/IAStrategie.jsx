@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { ChatInterface } from './components';
+import ConversationManager from './components/ConversationManager';
 import { useIAStrategie } from './hooks/useIAStrategie';
 import { appData } from '../../data.js';
+import '../../styles/conversation-sidebar.css';
 
 /**
  * Module IAStrategie - Interface Chat IA WikiPro avec Backend Multi-Provider
@@ -9,22 +11,10 @@ import { appData } from '../../data.js';
  */
 const IAStrategie = () => {
   const [showLegacyMode, setShowLegacyMode] = useState(false);
+  const [showCanvas, setShowCanvas] = useState(false);
   
-  // Hook legacy pour compatibilité
-  const {
-    selectedModel,
-    setSelectedModel,
-    inputText,
-    setInputText,
-    showCanvas,
-    setShowCanvas,
-    canvasContent,
-    setCanvasContent,
-    isGenerating,
-    aiModels,
-    handleGenerate,
-    handleKeyPress
-  } = useIAStrategie();
+  // Hook legacy pour compatibilité (utilisé seulement en mode legacy)
+  const legacyHook = useIAStrategie();
   // eslint-disable-next-line no-unused-vars
   const dataConnectors = {
     references: `Données disponibles : ${appData.references.length} références d'études`,
@@ -163,8 +153,8 @@ const IAStrategie = () => {
         <i className="fas fa-cog"></i> Legacy Mode
       </button>
 
-      {/* Interface Chat principale */}
-      <ChatInterface />
+      {/* Interface Chat principale avec sidebar d'historique */}
+      <ConversationManager />
     </div>
   );
 };

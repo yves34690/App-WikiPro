@@ -17,8 +17,28 @@
       "Bash(timeout 8 npm run start:dev)",
       "Bash(npm run start:dev:*)",
       "Bash(PORT=3002 npm start)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(touch:*)",
+      "Bash(npm run install:all:*)",
+      "Bash(npm run docker:up:*)",
+      "Bash(npm run:*)",
+      "Bash(taskkill:*)",
+      "Bash(cmd /c:*)",
+      "Bash(npm rebuild:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(timeout 10s npm run start:dev)",
+      "Bash(timeout 8s npm run start:dev)",
+      "Bash(timeout 8s npm start)",
+      "Bash(node:*)",
+      "Bash(move ai-integration-validation.test.ts ai-integration-validation.spec.ts)",
+      "Bash(copy .env.example .env)",
+      "Bash(cp:*)",
+      "Bash(powershell:*)"
     ],
-    "deny": []
+    "deny": [],
+    "additionalDirectories": [
+      "C:\\c\\Users\\ycloa\\App-WikiPro"
+    ]
   }
 }

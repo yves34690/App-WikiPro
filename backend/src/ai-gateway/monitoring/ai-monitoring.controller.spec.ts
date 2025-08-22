@@ -12,6 +12,7 @@ import {
   ExportResponseDto,
   RealTimePerformanceDto
 } from './dto';
+import { ExportPeriod, ExportFormat, ExportMetricType } from './dto/export-metrics.dto';
 
 /**
  * Tests complets pour AIMonitoringController - TICKET-BACKEND-005
@@ -26,7 +27,7 @@ describe('AIMonitoringController', () => {
 
   const mockTenantStats: TenantAIStatsDto = {
     tenantId: mockTenantId,
-    period: 'last_7d',
+    period: ExportPeriod.LAST_7D,
     startDate: new Date('2024-01-01'),
     endDate: new Date('2024-01-07'),
     totalCostUsd: 125.50,
@@ -180,7 +181,7 @@ describe('AIMonitoringController', () => {
 
   const mockPerformanceMetrics: PerformanceMetricsDto = {
     tenantId: mockTenantId,
-    period: 'last_7d',
+    period: ExportPeriod.LAST_7D,
     startDate: new Date('2024-01-01'),
     endDate: new Date('2024-01-07'),
     responseTime: {
@@ -365,13 +366,13 @@ describe('AIMonitoringController', () => {
 
       const result = await controller.getTenantStats(mockTenantId, {
         tenantId: mockTenantId,
-        period: 'last_7d'
+        period: ExportPeriod.LAST_7D
       });
 
       expect(result).toEqual(mockTenantStats);
       expect(analyticsService.getTenantStats).toHaveBeenCalledWith({
         tenantId: mockTenantId,
-        period: 'last_7d'
+        period: ExportPeriod.LAST_7D
       });
     });
 
@@ -381,7 +382,7 @@ describe('AIMonitoringController', () => {
       await expect(
         controller.getTenantStats(mockTenantId, {
           tenantId: mockTenantId,
-          period: 'last_7d'
+          period: ExportPeriod.LAST_7D
         })
       ).rejects.toThrow(HttpException);
     });
@@ -425,8 +426,8 @@ describe('AIMonitoringController', () => {
         mockTenantId,
         {
           tenantId: mockTenantId,
-          format: 'json',
-          period: 'last_7d'
+          format: ExportFormat.JSON,
+          period: ExportPeriod.LAST_7D
         },
         mockResponse
       );
@@ -456,7 +457,7 @@ describe('AIMonitoringController', () => {
         {
           tenantId: mockTenantId,
           format: 'csv',
-          period: 'last_7d'
+          period: ExportPeriod.LAST_7D
         },
         mockResponse
       );
@@ -569,7 +570,7 @@ describe('AIMonitoringController', () => {
 
       const filters = {
         tenantId: mockTenantId,
-        period: 'last_7d'
+        period: ExportPeriod.LAST_7D
       };
 
       const result = await controller.getPerformanceMetrics(filters);
@@ -794,9 +795,9 @@ describe('AIMonitoringController', () => {
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         metadata: {
           tenantId: mockTenantId,
-          format: 'json',
-          period: 'last_7d',
-          metricsIncluded: ['cost', 'performance'],
+          format: ExportFormat.JSON,
+          period: ExportPeriod.LAST_7D,
+          metricsIncluded: [ExportMetricType.COST, ExportMetricType.PERFORMANCE],
           recordCount: 150,
           generatedAt: new Date()
         },
@@ -817,8 +818,8 @@ describe('AIMonitoringController', () => {
 
       const exportDto = {
         tenantId: mockTenantId,
-        format: 'json' as const,
-        period: 'last_7d' as const,
+        format: ExportFormat.JSON,
+        period: ExportPeriod.LAST_7D as const,
         metrics: ['cost', 'performance'] as const,
         includeRecommendations: true
       };
@@ -840,8 +841,8 @@ describe('AIMonitoringController', () => {
         completedAt: new Date(),
         metadata: {
           tenantId: mockTenantId,
-          format: 'json' as const,
-          metrics: ['cost'] as const
+          format: ExportFormat.JSON,
+          metrics: [ExportMetricType.COST] as const
         },
         result: {
           fileName: 'export.json',
@@ -953,7 +954,7 @@ describe('AIMonitoringController', () => {
       analyticsService.getTenantStats.mockRejectedValue(new Error('Service unavailable'));
 
       await expect(
-        controller.getTenantStats(mockTenantId, { tenantId: mockTenantId, period: 'last_7d' })
+        controller.getTenantStats(mockTenantId, { tenantId: mockTenantId, period: ExportPeriod.LAST_7D })
       ).rejects.toThrow(HttpException);
     });
 
@@ -962,7 +963,7 @@ describe('AIMonitoringController', () => {
       analyticsService.getTenantStats.mockRejectedValue(new Error('Invalid tenant ID'));
 
       await expect(
-        controller.getTenantStats(invalidTenantId, { tenantId: invalidTenantId, period: 'last_7d' })
+        controller.getTenantStats(invalidTenantId, { tenantId: invalidTenantId, period: ExportPeriod.LAST_7D })
       ).rejects.toThrow(HttpException);
     });
 
@@ -970,7 +971,7 @@ describe('AIMonitoringController', () => {
       analyticsService.getPerformanceMetrics.mockRejectedValue(new Error('Request timeout'));
 
       await expect(
-        controller.getPerformanceMetrics({ tenantId: mockTenantId, period: 'last_7d' })
+        controller.getPerformanceMetrics({ tenantId: mockTenantId, period: ExportPeriod.LAST_7D })
       ).rejects.toThrow(HttpException);
     });
   });

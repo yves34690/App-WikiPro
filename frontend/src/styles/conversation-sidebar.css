@@ -1,0 +1,409 @@
+/* Styles pour la sidebar des conversations */
+
+.conversation-sidebar {
+  position: fixed;
+  left: 0;
+  top: 80px;
+  bottom: 0;
+  width: 380px;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.conversation-sidebar.closed {
+  transform: translateX(-100%);
+}
+
+.conversation-sidebar-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-subtle);
+}
+
+.conversation-list {
+  flex: 1;
+  overflow: auto;
+  padding: 8px;
+}
+
+.conversation-item {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.conversation-item:hover {
+  background: var(--color-bg-subtle);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.conversation-item.active {
+  background: var(--color-primary-subtle);
+  border-color: var(--color-primary);
+}
+
+.conversation-item-content {
+  padding: 12px;
+}
+
+.conversation-item-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.conversation-item-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  margin-right: 8px;
+}
+
+.conversation-item-meta {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.conversation-item-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.conversation-item:hover .conversation-item-actions {
+  opacity: 1;
+}
+
+.conversation-item-action {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.conversation-item-action:hover {
+  background: var(--color-bg-subtle);
+  color: var(--color-text);
+}
+
+.conversation-item-action.danger:hover {
+  color: var(--color-danger);
+}
+
+.conversation-item-last-message {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: italic;
+}
+
+.conversation-item-expanded-details {
+  margin-top: 12px;
+  padding: 8px;
+  background: var(--color-bg-subtle);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.conversation-search {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.conversation-search input {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.conversation-search input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-subtle);
+}
+
+.conversation-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.conversation-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+}
+
+.conversation-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.conversation-action-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  background: var(--color-primary);
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  opacity: 1;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.conversation-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.conversation-action-btn.secondary {
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.conversation-action-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.conversation-empty-state {
+  padding: 20px;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.conversation-empty-state i {
+  font-size: 24px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.conversation-loading {
+  padding: 20px;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.conversation-toggle-btn {
+  position: fixed;
+  left: 0;
+  top: 80px;
+  z-index: 1000;
+  background: var(--color-surface);
+  border-radius: 0 8px 8px 0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-border);
+  border-left: none;
+  padding: 12px 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.conversation-toggle-btn:hover {
+  color: var(--color-primary);
+  background: var(--color-bg-subtle);
+}
+
+.conversation-context-filter {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.conversation-context-filter:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-subtle);
+}
+
+.conversation-context-icon {
+  font-size: 12px;
+  color: var(--color-primary);
+  margin-right: 6px;
+}
+
+/* Styles pour les modals de confirmation */
+.conversation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.conversation-modal {
+  background: var(--color-surface);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--color-border);
+  max-width: 400px;
+  width: 90%;
+}
+
+.conversation-modal-title {
+  margin: 0 0 12px 0;
+  color: var(--color-text);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.conversation-modal-content {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.conversation-modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.conversation-modal-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.conversation-modal-btn.cancel {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.conversation-modal-btn.confirm {
+  border: none;
+  background: var(--color-danger);
+  color: white;
+}
+
+.conversation-modal-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Styles responsives */
+@media (max-width: 768px) {
+  .conversation-sidebar {
+    width: 100% !important;
+    transform: translateX(-100%);
+  }
+  
+  .conversation-sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+/* Animations */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+.conversation-sidebar.entering {
+  animation: slideInLeft 0.3s ease-out forwards;
+}
+
+.conversation-sidebar.exiting {
+  animation: slideOutLeft 0.3s ease-out forwards;
+}
+
+/* Scrollbar styling pour la liste des conversations */
+.conversation-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.conversation-list::-webkit-scrollbar-track {
+  background: var(--color-bg-subtle);
+}
+
+.conversation-list::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.conversation-list::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}

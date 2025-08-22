@@ -1,0 +1,74 @@
+# WikiPro - Configuration Docker pour développement
+# PostgreSQL + pgAdmin pour le Sprint 2A
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: wikipro-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: wikipro_dev
+      POSTGRES_USER: wikipro_user
+      POSTGRES_PASSWORD: wikipro_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/src/database/init:/docker-entrypoint-initdb.d/
+    networks:
+      - wikipro-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wikipro_user -d wikipro_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Interface d'administration pgAdmin
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: wikipro-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@wikipro.dev
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8080:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - wikipro-network
+
+  # Redis pour le cache (optionnel, préparation future)
+  redis:
+    image: redis:7-alpine
+    container_name: wikipro-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - wikipro-network
+    command: redis-server --appendonly yes
+
+# Volumes persistants
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  redis_data:
+    driver: local
+
+# Réseau dédié WikiPro
+networks:
+  wikipro-network:
+    driver: bridge
+    name: wikipro-network

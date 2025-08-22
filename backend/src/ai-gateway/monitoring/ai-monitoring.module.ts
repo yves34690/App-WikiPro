@@ -24,7 +24,9 @@ import { AIMonitoringController } from './ai-monitoring.controller';
 @Module({
   imports: [
     RedisModule,
-    TypeOrmModule.forFeature([Message, Conversation, User]),
+    ...(process.env.DATABASE_ENABLED !== 'false' ? [
+      TypeOrmModule.forFeature([Message, Conversation, User])
+    ] : []),
     ChatModule, // Pour MessageService et ConversationService
     AIGatewayModule.forRoot(), // Pour AIGatewayService
   ],

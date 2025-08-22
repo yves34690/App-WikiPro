@@ -16,8 +16,8 @@ describe('AppService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should return health status', () => {
-    const result = service.getHealth();
+  it('should return health status', async () => {
+    const result = await service.getHealth();
     
     expect(result).toHaveProperty('status', 'healthy');
     expect(result).toHaveProperty('version', '1.0.0');
