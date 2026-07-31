@@ -1,2 +1,6 @@
 node_modules/
 backend/.env
+.env
+.env.local
+.env.*.local
+!.env.example
