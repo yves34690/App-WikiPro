@@ -222,3 +222,4 @@ docs/api/generated/
 !README*.md
 !docs/
 !public/
+.env.*.local
